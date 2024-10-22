@@ -20,3 +20,12 @@ bilby_pipe <ini file>.ini --submit
 
 Note: you may need to change some settings to make things run on e.g. a slurm
 cluster.
+
+
+## Install the utils package
+
+This repo also contains a small utilities package to help producing results and plots. It can be installed by running
+
+```
+pip install .
+```
