@@ -3,9 +3,10 @@ Code to calculate the JS divergence between samples.
 
 Based on the code used in https://doi.org/10.5281/zenodo.8124198
 """
+
 import numpy as np
 from scipy.spatial.distance import jensenshannon
-from KDEpy import NaiveKDE
+from .kde import fit_kde
 
 
 def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
@@ -18,8 +19,19 @@ def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
 
 
 def calculate_js(
-    samplesA, samplesB, ntests=10, xsteps=100, nsamples=1000, base=2, rng=None
+    samplesA,
+    samplesB,
+    ntests=10,
+    xsteps=1000,
+    nsamples=1000,
+    base=2,
+    rng=None,
+    kde_class="NaiveKDE",
+    kernel="gaussian",
+    bw="silverman",
+    **kwargs,
 ):
+
     js_array = np.zeros(ntests)
     if nsamples is None:
         nsamples = min(len(samplesA), len(samplesB))
@@ -30,14 +42,12 @@ def calculate_js(
     for j in range(ntests):
         samples_a = rng.choice(samplesA, size=nsamples, replace=False)
         samples_b = rng.choice(samplesB, size=nsamples, replace=False)
-        xmin = min(np.min(samples_a), np.min(samples_b))
-        xmax = max(np.max(samples_a), np.max(samples_b))
+        xmin = max(np.min(samples_a), np.min(samples_b))
+        xmax = min(np.max(samples_a), np.max(samples_b))
         x = np.linspace(xmin, xmax, xsteps)
-        A_pdf = NaiveKDE().fit(samples_a).evaluate(x)
-        B_pdf = NaiveKDE().fit(samples_b).evaluate(x)
+        A_pdf = fit_kde(samplesA, kde_class, kernel=kernel, bw=bw, **kwargs).evaluate(x)
+        B_pdf = fit_kde(samplesB, kde_class, kernel=kernel, bw=bw, **kwargs).evaluate(x)
 
-        js_array[j] = np.nan_to_num(
-            np.power(jensenshannon(A_pdf, B_pdf, base=base), 2)
-        )
+        js_array[j] = np.nan_to_num(np.power(jensenshannon(A_pdf, B_pdf, base=base), 2))
 
     return calc_median_error(js_array)
