@@ -1,0 +1,17 @@
+injection_file: bbh_injections_seed_1234.json
+label: pocomc_det_frame_2det
+outdir: pococmc_det_frame_2det_phase
+detectors: [H1, L1]
+phase_parameter: phase
+sampler: pocomc
+sampler_kwargs:
+    precondition: false
+    n_effective: 1000
+    n_active: 500
+    n_total: 10000
+    n_steps: 10
+    n_max_steps: 500
+    save_every: 2
+    train_config:
+        patience: 30
+   
