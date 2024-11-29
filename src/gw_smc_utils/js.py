@@ -26,9 +26,7 @@ def calculate_js(
     nsamples=1000,
     base=2,
     rng=None,
-    kde_class="NaiveKDE",
-    kernel="gaussian",
-    bw="silverman",
+    bw_method="silverman",
     **kwargs,
 ):
 
@@ -45,8 +43,8 @@ def calculate_js(
         xmin = max(np.min(samples_a), np.min(samples_b))
         xmax = min(np.max(samples_a), np.max(samples_b))
         x = np.linspace(xmin, xmax, xsteps)
-        A_pdf = fit_kde(samplesA, kde_class, kernel=kernel, bw=bw, **kwargs).evaluate(x)
-        B_pdf = fit_kde(samplesB, kde_class, kernel=kernel, bw=bw, **kwargs).evaluate(x)
+        A_pdf = fit_kde(samplesA, bw_method=bw_method, **kwargs).evaluate(x)
+        B_pdf = fit_kde(samplesB, bw_method=bw_method, **kwargs).evaluate(x)
 
         js_array[j] = np.nan_to_num(np.power(jensenshannon(A_pdf, B_pdf, base=base), 2))
 
