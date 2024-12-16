@@ -3,9 +3,13 @@ Code to calculate the JS divergence between samples.
 
 Based on the code used in https://doi.org/10.5281/zenodo.8124198
 """
+from functools import partial
+from itertools import starmap
 
 import numpy as np
 from scipy.spatial.distance import jensenshannon
+
+
 from .kde import fit_kde
 
 
@@ -18,34 +22,57 @@ def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
     return median, plus, minus
 
 
+def _compute_js(
+    samplesA, samplesB, xsteps=1000, base=2, **kwargs
+):
+    xmin = max(np.min(samplesA), np.min(samplesB))
+    xmax = min(np.max(samplesA), np.max(samplesB))
+    x = np.linspace(xmin, xmax, xsteps)
+    A_pdf = fit_kde(samplesA, **kwargs)(x)
+    B_pdf = fit_kde(samplesB, **kwargs)(x)
+    return np.nan_to_num(np.power(jensenshannon(A_pdf, B_pdf, base=base), 2))
+
+
 def calculate_js(
     samplesA,
     samplesB,
-    ntests=10,
+    n_tests=10,
     xsteps=1000,
-    nsamples=1000,
+    n_samples=1000,
     base=2,
     rng=None,
-    bw_method="silverman",
+    verbose=False,
+    pool=None,
     **kwargs,
 ):
 
-    js_array = np.zeros(ntests)
-    if nsamples is None:
-        nsamples = min(len(samplesA), len(samplesB))
+    if n_samples is None:
+        n_samples = min(len(samplesA), len(samplesB))
+        if verbose:
+            print(f"Using all samples ({n_samples})")
 
     if rng is None:
         rng = np.random.default_rng()
 
-    for j in range(ntests):
-        samples_a = rng.choice(samplesA, size=nsamples, replace=False)
-        samples_b = rng.choice(samplesB, size=nsamples, replace=False)
-        xmin = max(np.min(samples_a), np.min(samples_b))
-        xmax = min(np.max(samples_a), np.max(samples_b))
-        x = np.linspace(xmin, xmax, xsteps)
-        A_pdf = fit_kde(samplesA, bw_method=bw_method, **kwargs).evaluate(x)
-        B_pdf = fit_kde(samplesB, bw_method=bw_method, **kwargs).evaluate(x)
+    if pool is not None:
+        map_fn = pool.starmap
+    else:
+        map_fn = starmap
 
-        js_array[j] = np.nan_to_num(np.power(jensenshannon(A_pdf, B_pdf, base=base), 2))
+    samples_a = np.array([
+        rng.choice(samplesA, size=(n_samples), replace=False)
+        for _ in range(n_tests)
+    ])
+    samples_b = np.array([
+        rng.choice(samplesB, size=(n_samples), replace=False)
+        for _ in range(n_tests)
+    ])
 
-    return calc_median_error(js_array)
+    map_kwargs = kwargs.copy()
+    map_kwargs["xsteps"] = xsteps
+    map_kwargs["base"] = base
+
+    js_vals = list(
+        map_fn(partial(_compute_js, **kwargs), zip(samples_a, samples_b))
+    )
+    return js_vals
