@@ -73,6 +73,6 @@ def calculate_js(
     map_kwargs["base"] = base
 
     js_vals = list(
-        map_fn(partial(_compute_js, **kwargs), zip(samples_a, samples_b))
+        map_fn(partial(_compute_js, **map_kwargs), zip(samples_a, samples_b))
     )
     return js_vals
