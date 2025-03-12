@@ -75,7 +75,7 @@ figure.autolayout : False
 figure.dpi : 200
 
 ### Fonts
-text.usetex: False
+text.usetex: True
 mathtext.fontset: cm
 font.family: serif
 font.serif: cmr10

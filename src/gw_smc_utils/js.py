@@ -25,8 +25,8 @@ def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
 def _compute_js(
     samplesA, samplesB, xsteps=1000, base=2, **kwargs
 ):
-    xmin = max(np.min(samplesA), np.min(samplesB))
-    xmax = min(np.max(samplesA), np.max(samplesB))
+    xmin = min(np.min(samplesA), np.min(samplesB))
+    xmax = max(np.max(samplesA), np.max(samplesB))
     x = np.linspace(xmin, xmax, xsteps)
     A_pdf = fit_kde(samplesA, **kwargs)(x)
     B_pdf = fit_kde(samplesB, **kwargs)(x)
@@ -46,10 +46,15 @@ def calculate_js(
     **kwargs,
 ):
 
+    min_samples = min(len(samplesA), len(samplesB))
     if n_samples is None:
-        n_samples = min(len(samplesA), len(samplesB))
+        n_samples = min_samples
         if verbose:
             print(f"Using all samples ({n_samples})")
+    elif n_samples > min_samples:
+        print("Warning: n_samples is greater than the number of samples in one of the datasets. Using all samples.")
+        print(f"Samples A = {len(samplesA)}, Samples B = {len(samplesB)}")
+        n_samples = min_samples
 
     if rng is None:
         rng = np.random.default_rng()
