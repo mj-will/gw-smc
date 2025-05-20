@@ -6,7 +6,9 @@ def load_bilby_posterior(filename: str, keys: list[str] = None):
     posterior = {}
     with h5py.File(filename, "r") as hdf_file:
         if keys is None:
-            keys = hdf_file[f"posterior"].keys()
+            keys = hdf_file["posterior"].keys()
         for key in keys:
+            if key not in hdf_file["posterior"]:
+                continue
             posterior[key] = hdf_file[f"posterior/{key}"][()]
     return posterior
