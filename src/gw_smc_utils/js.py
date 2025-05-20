@@ -25,8 +25,8 @@ def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
 def _compute_js(
     samplesA, samplesB, xsteps=1000, base=2, **kwargs
 ):
-    xmin = min(np.min(samplesA), np.min(samplesB))
-    xmax = max(np.max(samplesA), np.max(samplesB))
+    xmin = max(np.min(samplesA), np.min(samplesB))
+    xmax = min(np.max(samplesA), np.max(samplesB))
     x = np.linspace(xmin, xmax, xsteps)
     A_pdf = fit_kde(samplesA, **kwargs)(x)
     B_pdf = fit_kde(samplesB, **kwargs)(x)
