@@ -13,11 +13,17 @@ import os
 import numpy as np
 import tqdm
 import pandas as pd
+from pathlib import Path
 import scipy.stats
 import matplotlib.pyplot as plt
 from natsort import natsorted
+import json
+import re
 
 from bilby.core.result import read_in_result
+from pesummary.gw.plots.latex_labels import GWlatex_labels
+
+from gw_smc_utils.plotting import set_style
 
 
 def get_injection_credible_level(result, parameter, injection_parameters, weights=None):
@@ -114,7 +120,10 @@ def make_pp_plot(
     x_values = np.linspace(0, 1, 1001)
 
     N = len(credible_levels)
-    fig, ax = plt.subplots()
+
+    figsize = plt.rcParams['figure.figsize'].copy()
+    figsize[1] = 1.5 * figsize[1]
+    fig, ax = plt.subplots(figsize=figsize)
 
     if isinstance(confidence_interval, float):
         confidence_interval = [confidence_interval]
@@ -143,10 +152,8 @@ def make_pp_plot(
         pvalues.append(pvalue)
         print(f"{key}: {pvalue}")
 
-        try:
-            name = results[0].priors[key].latex_label
-        except (AttributeError, KeyError):
-            name = key
+        name = GWlatex_labels.get(key, key)
+        name = re.sub(r"\[.*?\]", "", name)
         label = "{} ({:2.3f})".format(name, pvalue)
         plt.plot(x_values, pp, lines[ii], label=label, **kwargs)
 
@@ -158,13 +165,20 @@ def make_pp_plot(
         "Combined p-value: {}".format(pvals.combined_pvalue))
 
     if title:
-        ax.set_title("N={}, p-value={:2.4f}".format(
+        ax.set_title("N={}, $p$-value={:2.4f}".format(
             len(results), pvals.combined_pvalue))
     ax.set_xlabel("C.I.")
     ax.set_ylabel("Fraction of events in C.I.")
-    ax.legend(handlelength=2, labelspacing=0.25, fontsize=legend_fontsize)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
+    fig.legend(
+        handlelength=2,
+        labelspacing=0.25,
+        fontsize=legend_fontsize,
+        loc="center",
+        bbox_to_anchor=(0.55, -0.15),
+        ncol=2,
+    )
     fig.tight_layout()
     return fig, pvals
 
@@ -175,7 +189,7 @@ def get_parser():
     )
     parser.add_argument(
         "--result-dir",
-        type=str,
+        type=Path,
         required=True,
     )
     parser.add_argument(
@@ -185,7 +199,7 @@ def get_parser():
     )
     parser.add_argument(
         "--outdir",
-        type=str,
+        type=Path,
         default=None,
     )
     parser.add_argument(
@@ -193,10 +207,22 @@ def get_parser():
         type=str,
         required=True,
     )
+    parser.add_argument(
+        "--figure-format",
+        type=str,
+        default="png",
+    )
+    parser.add_argument(
+        "--filename",
+        type=str,
+        default="pp_test",
+    )
     return parser
 
 
 def main(args):
+
+    set_style()
 
     injection_parameters = pd.read_hdf(args.injection_file, key="injections")
     injection_parameters["mass_ratio"].hist()
@@ -227,16 +253,35 @@ def main(args):
         outdir = args.result_dir
     else:
         outdir = args.outdir
-        os.makedirs(outdir, exist_ok=True)
+        outdir.mkdir(exist_ok=True, parents=True)
 
     print("Producing P-P plot")
     fig, p_values = make_pp_plot(
         results,
         injection_parameters=injection_parameters,
+        keys=[
+            "chirp_mass",
+            "mass_ratio",
+            "a_1",
+            "a_2",
+            "tilt_1",
+            "tilt_2",
+            "phi_12",
+            "phi_jl",
+            "luminosity_distance",
+            "dec",
+            "ra",
+            "theta_jn",
+            "psi",
+            "geocent_time",
+            "phase",
+        ]
     )
-    filename = os.path.join(outdir, "pp_test.png")
-
+    filename = outdir / f"{args.filename}.{args.figure_format}"
     fig.savefig(filename)
+
+    with open(outdir / "p_values.json", "w") as f:
+        json.dump(p_values._asdict(), f)
 
 
 if __name__ == "__main__":

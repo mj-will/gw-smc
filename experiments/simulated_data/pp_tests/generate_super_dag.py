@@ -109,8 +109,8 @@ def main(args):
         }
         if args.detector_frame:
             detectors_by_snr = sorted(snrs, key=snrs.get, reverse=True)
-            arguments["reference-frame"] = "".join(detectors_by_snr.keys())
-            arguments["time-reference"] = detectors_by_snr.keys()[0]
+            arguments["reference-frame"] = "".join(detectors_by_snr)
+            arguments["time-reference"] = detectors_by_snr[0]
         else:
             arguments["reference-frame"] = "sky"
             arguments["time-reference"] = "geocent"
