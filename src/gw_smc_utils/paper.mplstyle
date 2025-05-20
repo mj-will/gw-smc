@@ -5,10 +5,11 @@
 axes.prop_cycle : (cycler('color', ['0173b2', 'de8f05', '029e73', 'd55e00', 'cc78bc', 'ca9161', 'fbafe4', '949494', 'ece133', '56b4e9']))
 
 ### Axes
-axes.titlesize : large
+axes.titlesize : 9
 axes.labelsize : 9
 axes.formatter.use_mathtext : True
 axes.linewidth : 0.5
+axes.grid      : True
 
 ### Grid lines
 grid.linewidth : 0.5

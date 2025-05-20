@@ -19,9 +19,10 @@ def inverse_gaussian_cdf(x):
 
 def get_bilby_prior(filename: str):
     from bilby.gw.prior import CBCPriorDict
+    from bilby.core.utils import decode_bilby_json
     import json
 
     with h5py.File(filename, "r") as hdf_file:
-        priors_dict = json.loads(hdf_file["priors"][()])
+        priors_dict = json.loads(hdf_file["priors"][()], object_hook=decode_bilby_json)
         priors = CBCPriorDict._get_from_json_dict(priors_dict)
     return priors
