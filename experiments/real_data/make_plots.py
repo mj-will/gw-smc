@@ -2,9 +2,13 @@ import argparse
 from pesummary.io import read as pesummary_read
 from pesummary.utils.samples_dict import MultiAnalysisSamplesDict
 import matplotlib.pyplot as plt
+import numpy as np
 from pathlib import Path
 
 from gw_smc_utils.results import find_gwtc_results
+from gw_smc_utils.plotting import set_style
+
+set_style()
 
 
 def get_parser():
@@ -37,23 +41,49 @@ def main(args):
     for label, result_file in zip(labels, args.results):
         results[label] = pesummary_read(str(result_file))
 
+    n_samples = 10_000
+
     samples = MultiAnalysisSamplesDict({
-        release: lvk_result.samples_dict[analysis_key],
-        **{k: v.samples_dict for k, v in results.items()}
+        release: lvk_result.samples_dict[analysis_key].downsample(n_samples),
+        **{k: v.samples_dict.downsample(n_samples) for k, v in results.items()}
     })
 
     plot_parameters = {
-        "instrinsic": ["mass_1_source", "mass_2_source", "chi_eff", "chi_p"],
+        "intrinsic": ["mass_1_source", "mass_2_source", "chi_eff", "chi_p"],
         "localization": ["ra", "dec", "luminosity_distance", "theta_jn"],
     }
 
-    for key, parameters in plot_parameters.items():
-        samples.plot(
-            parameters=parameters,
-            labels=[release] + labels,
-            type="corner"
-        )
-        plt.savefig(output / f"{args.SID}_{key}.pdf")
+    with plt.rc_context({
+        "legend.fontsize": 24,
+        "axes.labelsize": 24,
+        "xtick.labelsize": 20,
+        "ytick.labelsize": 20,
+    }):
+        for key, parameters in plot_parameters.items():
+
+            corner_kwargs = dict(
+                levels=(1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.)),
+                label_kwargs=dict(fontsize=24),
+                bins=32,
+            )
+
+            samples.plot(
+                parameters=parameters,
+                labels=[release] + labels,
+                colors=["C1", "C0", "C2"],
+                type="corner",
+                **corner_kwargs,
+            )
+            axs = np.array(plt.gcf().get_axes(), dtype=object).reshape(
+                len(parameters), len(parameters)
+            )
+
+            for i, parameter in enumerate(parameters):
+                jsd_base_e = samples.js_divergence(parameter)
+                jsd_base_2 = jsd_base_e / np.log(2) * 1000
+                print(f"{parameter}: {jsd_base_2} mbits")
+                axs[i, i].set_title(f"{jsd_base_2:.2f} mbits", fontsize=20)
+            plt.savefig(output / f"{args.SID}_{key}.pdf")
 
 
 if __name__ == "__main__":
