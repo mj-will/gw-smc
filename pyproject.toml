@@ -17,3 +17,7 @@ dependencies = [
 dynamic = ["version"]
 
 [tool.setuptools_scm]
+
+[project.scripts]
+gw_smc_utils_plot_event = "gw_smc_utils.cli.event_plots:main"
+
