@@ -1,0 +1,31 @@
+accounting_group = ligo.dev.o4.cbc.pe.bilby
+accounting_group_user = michael.williams
+
+# Change this to set the number of CPUs
+ncpus=4
+
+# Change these to select the input directories
+ndets=3
+dets=H1L1V1
+frame=det
+dynesty_label=uniform_chirp_mass
+pocomc_label=uniform_chirp_mass_transforms_sinf
+
+filename=jsd_results/update_data/uniform_chirp_mass_transforms_sinf/$(frame)_frame/$(ndets)det_max_min_xsteps/data$(ProcId).json
+result1=outdir_dynesty_$(ndets)det_$(frame)_frame_$(dynesty_label)/injection_$(ProcId)/final_result/dynesty_pp_test_data0_1364342674-0_analysis_$(dets)_result.hdf5
+result2=outdir_pocomc_$(ndets)det_$(frame)_frame_$(pocomc_label)/injection_$(ProcId)/final_result/pococmc_pp_test_data0_1364342674-0_analysis_$(dets)_result.hdf5
+
+executable   = /home/michael.williams/.conda/envs/gw-smc-sinf/bin/python
+arguments    = compute_js.py $(result1) $(result2) --filename $(filename) --verbose --n-pool $(ncpus) --n-samples 5000 --n-tests 10 --xsteps 1000
+
+output       = condor_logs/jsd_$(ClusterId).$(ProcId).out
+error        = condor_logs/jsd_$(ClusterId).$(ProcId).err
+log          = condor_logs/jsd_$(ClusterId).$(ProcId).log
+
+request_cpus   = $(ncpus)
+request_memory = 1024M
+request_disk   = 1024M
+
+should_transfer_files = no
+
+queue 100

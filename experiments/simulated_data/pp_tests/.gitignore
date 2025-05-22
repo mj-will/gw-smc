@@ -1,0 +1,4 @@
+# Ignore all outdirs
+outdir*/
+condor_logs/
+jsd_results/
