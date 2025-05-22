@@ -1,0 +1,10 @@
+include config.mk
+
+.PHONY: all
+all: $(DATA_RELEASE_PATH)/GWTC-2.1 $(DATA_RELEASE_PATH)/GWTC-3
+
+$(DATA_RELEASE_PATH)/GWTC-2.1:
+	zenodo_get $(GWTC2p1_ZENODO_ID) -g "IGWN-GWTC2p1-v2-GW150914_095045_PEDataRelease_mixed_nocosmo.h5" -o $(DATA_RELEASE_PATH)/GWTC-2.1 \
+
+$(DATA_RELEASE_PATH)/GWTC-3:
+	zenodo_get $(GWTC3_ZENODO_ID) -g "IGWN-GWTC3p0-v1-GW200129_065458_PEDataRelease_mixed_nocosmo.h5" -o $(DATA_RELEASE_PATH)/GWTC-3 \
