@@ -1,0 +1,2 @@
+RELEASE_PATH=gw_smc_data_release_results
+RELEASE_PATH_DATA=gw_smc_data_release_data
