@@ -161,8 +161,11 @@ cython_debug/
  
 # Project specific
 outdir_*/
+figures/
+*.pdf
 *.png
 *.dat
 *.gz
 *.state
 *.npz
+*.old
