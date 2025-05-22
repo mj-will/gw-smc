@@ -40,28 +40,28 @@ real_data: $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5 $(RELEASE
 
 .PHONY: pp_test_dynesty_2det pp_test_dynesty_3det pp_test_pocomc_2det pp_test_pocomc_3det
 
-pp_test_dynesty_2det:
+$(RELEASE_PATH)/simulated_data/pp_test_dynesty_2det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(DYNESTY_PATH_2DET) \
-		--output-dir $(RELEASE_PATH)/simulated_data/pp_tests/dynesty_2det/ \
+		--output-dir $@ \
 		--label bilby_result_pp_test_dynesty_2det
 
-pp_test_dynesty_3det:
+$(RELEASE_PATH)/simulated_data/pp_test_dynesty_3det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(DYNESTY_PATH_3DET) \
-		--output-dir $(RELEASE_PATH)/simulated_data/pp_tests/dynesty_3det/ \
+		--output-dir $@ \
 		--label bilby_result_pp_test_dynesty_3det
 
-pp_test_pocomc_2det:
+$(RELEASE_PATH)/simulated_data/pp_test_pocomc_2det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(POCOCMC_PATH_2DET) \
-		--output-dir $(RELEASE_PATH)/simulated_data/pp_tests/pocomc_2det/ \
+		--output-dir $@ \
 		--label bilby_result_pp_test_pocomc_2det
 
-pp_test_pocomc_3det:
+$(RELEASE_PATH)/simulated_data/pp_test_pocomc_3det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(POCOCMC_PATH_3DET) \
-		--output-dir $(RELEASE_PATH)/simulated_data/pp_tests/pocomc_3det/ \
+		--output-dir $@ \
 		--label bilby_result_pp_test_pocomc_3det
 
 .PHONY: pp_tests
