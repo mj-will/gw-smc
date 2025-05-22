@@ -20,6 +20,7 @@ def get_parser():
     parser.add_argument("--data-releases", nargs="+", type=str, default=["GWTC-2.1", "GWTC-3"])
     parser.add_argument("--data-release-path", type=str, default="data_releases")
     parser.add_argument("--cosmo", action="store_true")
+    parser.add_argument("--seed", type=int, default=42)
     return parser
 
 
@@ -27,6 +28,8 @@ def main():
 
     parser = get_parser()
     args = parser.parse_args()
+
+    np.random.seed(args.seed)
 
     filepath, release = find_gwtc_results(
         args.data_release_path, args.data_releases, args.SID, args.cosmo
