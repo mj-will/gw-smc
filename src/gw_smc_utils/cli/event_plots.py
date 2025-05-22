@@ -23,8 +23,11 @@ def get_parser():
     return parser
 
 
-def main(args):
-    print(args)
+def main():
+
+    parser = get_parser()
+    args = parser.parse_args()
+
     filepath, release = find_gwtc_results(
         args.data_release_path, args.data_releases, args.SID, args.cosmo
     )
@@ -87,6 +90,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = get_parser()
-    args = parser.parse_args()
-    main(args)
+    main()
