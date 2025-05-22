@@ -1,42 +1,26 @@
-## bilby_pipe version
-
-These analyses require the fix from https://git.ligo.org/lscsoft/bilby_pipe/-/merge_requests/584.
-They therefore use the master branch at commit [d374c6a0264b27463fbedad31c22aa33f26ab99c](https://git.ligo.org/lscsoft/bilby_pipe/-/commit/d374c6a0264b27463fbedad31c22aa33f26ab99c).
-
-This can be installed using `pip`:
-
-```
-pip install git+https://git.ligo.org/lscsoft/bilby_pipe.git@d374c6a0264b27463fbedad31c22aa33f26ab99c
-```
-
-
-## Authentication
-
-```
-kinit
-export HTGETTOKENOPTS="-a vault.ligo.org -i igwn"
-htgettoken
-```
-
+# Analyzing real events
 
 ## Downloading GWTC 2.1 and 3 samples
 
-**Note:** this will download more 40 GB of data and may take a long time.
+This `Makefile` in this directory contains commands to download the data release
+files needed to produce the comparison pages.
 
-First, install `zenodo_get`
+Run the following to download the files:
 
-```
-pip install zenodo_get
-```
-
-then, for GWTC 2.1, run
-
-```
-zenodo_get https://doi.org/10.5281/zenodo.6513631
+```bash
+make data_releases
 ```
 
-and for GWTC 3, run
+**Note:** if you have changed `DATA_RELEASE_PATH` the in `config.mk`, then you will need to change
+`data_releases` to match.
+
+
+## Producing plots
+
+The figures included in the paper can be produced by running the following command in this directory:
 
 ```
-zenodo_get https://doi.org/10.5281/zenodo.8177023
+make GW150914_plots GW200129_plots
 ```
+
+The figures are saved in the `figures` directory.
