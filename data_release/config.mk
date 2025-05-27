@@ -1,3 +1,3 @@
-RELEASE_PATH=gw_smc_data_release_core_results
+RELEASE_PATH=gw_smc_data_release_results
 RELEASE_PATH_ADDITIONAL=gw_smc_data_release_additional_results
 RELEASE_PATH_DATA=gw_smc_data_release_data

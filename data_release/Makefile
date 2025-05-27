@@ -118,17 +118,25 @@ $(RELEASE_PATH)/simulated_data/bns_results/jsd_results:
 .PHONY: bns_results
 bns_results: $(RELEASE_PATH)/simulated_data/bns_results/$(BNS_SUMMARY_FILE) $(RELEASE_PATH)/simulated_data/bns_results/jsd_results
 
-$(RELEASE_PATH_ADDITIONAL)/bns_results/:
-	mkdir -p $(RELEASE_PATH_ADDITIONAL)/bns_results
+$(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results/:
+	mkdir -p $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results
 	python fetch_and_rename_bns_results.py \
 		--input-dir $(BNS_PATH)/ \
-		--output-dir $(RELEASE_PATH_ADDITIONAL)/bns_results \
+		--output-dir $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results \
 		--prefix outdir \
 		--label bilby_result_bns_analysis \
 		--verbose
 
 .PHONY: bns_additional_results
-bns_additional_results: $(RELEASE_PATH_ADDITIONAL)/bns_results/
+bns_additional_results: $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results/
+
+bns_results.zip: bns_results
+	@echo "Creating BNS results zip file..."
+	zip -r $@ $(RELEASE_PATH)/simulated_data/bns_results
+
+bns_additional_results.zip: bns_additional_results
+	@echo "Creating additional BNS results zip file..."
+	zip -r $@ $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results
 
 $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5:
 	mkdir -p $(RELEASE_PATH_DATA)
@@ -146,4 +154,4 @@ pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5 $(RELEA
 .PHONY: clean
 clean:
 	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA) $(RELEASE_PATH_ADDITIONAL)
-	rm gw_smc_data_release_data.zip gw_smc_data_release_results.zip
+	rm -f gw_smc_data_release_data.zip gw_smc_data_release_results.zip
