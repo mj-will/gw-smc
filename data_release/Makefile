@@ -20,6 +20,13 @@ PP_TEST_JSD_3DET_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_JSD_RESULT_3DET
 PP_TEST_INJECTION_FILE_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_INJECTION_FILE))
 PP_TEST_INJECTION_DATA_PATH_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_INJECTION_DATA_PATH))
 
+PP_TEST_SUMMARY_FILE_REAL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_SUMMARY_FILE))
+
+DYNESTY_2DET_CREDIBLE_LEVELS_FILE_REAL_PATH=$(realpath $(PP_TESTS_PATH)/$(DYNESTY_2DET_CREDIBLE_LEVELS_FILE))
+DYNESTY_3DET_CREDIBLE_LEVELS_FILE_REAL_PATH=$(realpath $(PP_TESTS_PATH)/$(DYNESTY_3DET_CREDIBLE_LEVELS_FILE))
+POCOMC_2DET_CREDIBLE_LEVELS_FILE_REAL_PATH=$(realpath $(PP_TESTS_PATH)/$(POCOMC_2DET_CREDIBLE_LEVELS_FILE))
+POCOMC_3DET_CREDIBLE_LEVELS_FILE_REAL_PATH=$(realpath $(PP_TESTS_PATH)/$(POCOMC_3DET_CREDIBLE_LEVELS_FILE))
+
 BNS_PATH=$(SIMULATED_DATA_PATH)/bns/
 BNS_CONFIG=$(BNS_PATH)/config.mk
 include $(BNS_CONFIG)
@@ -41,7 +48,7 @@ gw_smc_data_release_results.zip: data_release
 	@echo "Creating zip file..."
 	zip -r $@ $(RELEASE_PATH)
 
-gw_smc_data_release_data.zip: data_release
+gw_smc_data_release_data.zip: injection_data
 	@echo "Creating zip file..."
 	zip -r $@ $(RELEASE_PATH_DATA)
 
@@ -63,37 +70,63 @@ $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5:
 .PHONY: real_data
 real_data: $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5 $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5
 
-.PHONY: pp_test_dynesty_2det pp_test_dynesty_3det pp_test_pocomc_2det pp_test_pocomc_3det
+$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_pocomc_2det.hdf5:
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels
+	$(COPY_CMD) "$(POCOMC_2DET_CREDIBLE_LEVELS_FILE_REAL_PATH)" "$@"
 
-$(RELEASE_PATH)/simulated_data/pp_test_dynesty_2det:
+$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_pocomc_3det.hdf5:
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels
+	$(COPY_CMD) "$(POCOMC_3DET_CREDIBLE_LEVELS_FILE_REAL_PATH)" "$@"
+
+$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_dynesty_2det.hdf5:
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels
+	$(COPY_CMD) "$(DYNESTY_2DET_CREDIBLE_LEVELS_FILE_REAL_PATH)" "$@"
+
+$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_dynesty_3det.hdf5:
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels
+	$(COPY_CMD) "$(DYNESTY_3DET_CREDIBLE_LEVELS_FILE_REAL_PATH)" "$@"
+
+
+.PHONY: pp_test_credible_levels
+pp_test_credible_levels: \
+	$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_pocomc_2det.hdf5 \
+	$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_pocomc_3det.hdf5 \
+	$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_dynesty_2det.hdf5 \
+	$(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_dynesty_3det.hdf5
+
+$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_dynesty_2det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(DYNESTY_PATH_2DET) \
 		--output-dir $@ \
 		--label bilby_result_pp_test_dynesty_2det
 
-$(RELEASE_PATH)/simulated_data/pp_test_dynesty_3det:
+$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_dynesty_3det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(DYNESTY_PATH_3DET) \
 		--output-dir $@ \
 		--label bilby_result_pp_test_dynesty_3det
 
-$(RELEASE_PATH)/simulated_data/pp_test_pocomc_2det:
+$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_pocomc_2det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(POCOCMC_PATH_2DET) \
 		--output-dir $@ \
 		--label bilby_result_pp_test_pocomc_2det
 
-$(RELEASE_PATH)/simulated_data/pp_test_pocomc_3det:
+$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_pocomc_3det:
 	python fetch_and_rename_pp_test_results.py \
 		--input-dir $(PP_TESTS_PATH)/$(POCOCMC_PATH_3DET) \
 		--output-dir $@ \
 		--label bilby_result_pp_test_pocomc_3det
 
 .PHONY: pp_tests
-pp_tests: $(RELEASE_PATH)/simulated_data/pp_test_dynesty_2det \
-		$(RELEASE_PATH)/simulated_data/pp_test_dynesty_3det \
-		$(RELEASE_PATH)/simulated_data/pp_test_pocomc_2det \
-		$(RELEASE_PATH)/simulated_data/pp_test_pocomc_3det
+pp_tests: $(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_dynesty_2det \
+		$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_dynesty_3det \
+		$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_pocomc_2det \
+		$(RELEASE_PATH_ADDITIONAL)/simulated_data/pp_tests/pp_test_pocomc_3det
+
+$(RELEASE_PATH)/simulated_data/pp_tests/$(PP_TEST_SUMMARY_FILE):
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests
+	$(COPY_CMD) "$(PP_TEST_SUMMARY_FILE_REAL_PATH)" "$@"
 
 $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/2det:
 	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results
