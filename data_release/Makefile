@@ -20,11 +20,22 @@ PP_TEST_JSD_3DET_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_JSD_RESULT_3DET
 PP_TEST_INJECTION_FILE_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_INJECTION_FILE))
 PP_TEST_INJECTION_DATA_PATH_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_INJECTION_DATA_PATH))
 
+BNS_PATH=$(SIMULATED_DATA_PATH)/bns/
+BNS_CONFIG=$(BNS_PATH)/config.mk
+include $(BNS_CONFIG)
+
+BNS_SUMMARY_FILE_REAL_PATH=$(realpath $(BNS_PATH)/$(BNS_SUMMARY_FILE))
+BNS_JSD_RESULTS_FULL_PATH=$(realpath $(BNS_PATH)/$(BNS_JSD_PATH))
+
 RESULTS_RELEASE_PATH=$(RELEASE_PATH)/results
 
 .PHONY: data_release
-data_release: real_data pp_tests jsd_results pp_test_injection_data
+data_release: real_data pp_tests jsd_results pp_test_injection_data bns_results
 	@echo "Data release is complete. The data is available in $(RELEASE_PATH)."
+
+.PHONY: data_release_additional
+data_release_additional: bns_additional_results
+	@echo "Additional data release is complete. The additional data is available in $(RELEASE_PATH_ADDITIONAL)."
 
 gw_smc_data_release_results.zip: data_release
 	@echo "Creating zip file..."
@@ -92,6 +103,29 @@ $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/3det:
 jsd_results: $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/2det $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/3det
 
 
+$(RELEASE_PATH)/simulated_data/bns_results/$(BNS_SUMMARY_FILE):
+	mkdir -p $(RELEASE_PATH)/simulated_data/bns_results
+	$(COPY_CMD) $(BNS_SUMMARY_FILE_REAL_PATH) "$@"
+
+$(RELEASE_PATH)/simulated_data/bns_results/jsd_results:
+	mkdir -p $(RELEASE_PATH)/simulated_data/bns_results
+	$(COPY_CMD) "$(BNS_JSD_RESULTS_FULL_PATH)" "$@"
+
+.PHONY: bns_results
+bns_results: $(RELEASE_PATH)/simulated_data/bns_results/$(BNS_SUMMARY_FILE) $(RELEASE_PATH)/simulated_data/bns_results/jsd_results
+
+$(RELEASE_PATH_ADDITIONAL)/bns_results/:
+	mkdir -p $(RELEASE_PATH_ADDITIONAL)/bns_results
+	python fetch_and_rename_bns_results.py \
+		--input-dir $(BNS_PATH)/ \
+		--output-dir $(RELEASE_PATH_ADDITIONAL)/bns_results \
+		--prefix outdir \
+		--label bilby_result_bns_analysis \
+		--verbose
+
+.PHONY: bns_additional_results
+bns_additional_results: $(RELEASE_PATH_ADDITIONAL)/bns_results/
+
 $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5:
 	mkdir -p $(RELEASE_PATH_DATA)
 	@echo $(PP_TEST_INJECTION_FILE_FULL_PATH)
@@ -107,5 +141,5 @@ pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5 $(RELEA
 
 .PHONY: clean
 clean:
-	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA)
+	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA) $(RELEASE_PATH_ADDITIONAL)
 	rm gw_smc_data_release_data.zip gw_smc_data_release_results.zip
