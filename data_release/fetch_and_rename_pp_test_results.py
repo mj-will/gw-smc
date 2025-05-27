@@ -52,7 +52,7 @@ def main():
             continue
 
         src_file = Path(matches[0]).resolve()
-        out_filename = f"bilby_result_pp_test_{args.label}_{inj_dir.name}.hdf5"
+        out_filename = f"{args.label}_{inj_dir.name}.hdf5"
         out_path = args.output_dir / out_filename
 
         # Symbolic link to the source file
