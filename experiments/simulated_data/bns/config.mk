@@ -1,0 +1,2 @@
+BNS_SUMMARY_FILE=bns_results_summary.hdf5
+BNS_JSD_PATH=results/jsd_marg/

@@ -1,3 +1,5 @@
+include config.mk
+
 .PHONY: submit_all
 submit_all : 
 	bash submit_all.sh
@@ -13,8 +15,10 @@ CORNER_PLOTS := $(addsuffix corner.png, $(dir $(RESULT_FILES)))
 corner_plots: $(CORNER_PLOTS)
 
 
-JSD_OUTDIR=results/jsd_marg/
-
 .PHONY: compute_jsd
 compute_jsd:
-	python compute_js.py --outdir $(JSD_OUTDIR) --samplers dynesty pocomc --n-pool 4 --prefix outdir
+	python compute_js.py --outdir $(BNS_JSD_PATH) --samplers dynesty pocomc --n-pool 4 --prefix outdir
+
+
+bns_results_summary.hdf5:
+	python produce_summary.py --filename $(BNS_SUMMARY_FILE)
