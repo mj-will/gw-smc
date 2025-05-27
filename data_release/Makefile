@@ -26,6 +26,16 @@ RESULTS_RELEASE_PATH=$(RELEASE_PATH)/results
 data_release: real_data pp_tests jsd_results pp_test_injection_data
 	@echo "Data release is complete. The data is available in $(RELEASE_PATH)."
 
+gw_smc_data_release_results.zip: data_release
+	@echo "Creating zip file..."
+	zip -r $@ $(RELEASE_PATH)
+
+gw_smc_data_release_data.zip: data_release
+	@echo "Creating zip file..."
+	zip -r $@ $(RELEASE_PATH_DATA)
+
+.PHONY: zip_files
+zip_files: gw_smc_data_release_results.zip gw_smc_data_release_data.zip
 
 $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5:
 	mkdir -p $(RELEASE_PATH)/real_data
@@ -65,7 +75,10 @@ $(RELEASE_PATH)/simulated_data/pp_test_pocomc_3det:
 		--label bilby_result_pp_test_pocomc_3det
 
 .PHONY: pp_tests
-pp_tests: pp_test_dynesty_2det pp_test_dynesty_3det pp_test_pocomc_2det pp_test_pocomc_3det
+pp_tests: $(RELEASE_PATH)/simulated_data/pp_test_dynesty_2det \
+		$(RELEASE_PATH)/simulated_data/pp_test_dynesty_3det \
+		$(RELEASE_PATH)/simulated_data/pp_test_pocomc_2det \
+		$(RELEASE_PATH)/simulated_data/pp_test_pocomc_3det
 
 $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/2det:
 	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results
@@ -95,3 +108,4 @@ pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5 $(RELEA
 .PHONY: clean
 clean:
 	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA)
+	rm gw_smc_data_release_data.zip gw_smc_data_release_results.zip
