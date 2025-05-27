@@ -13,6 +13,7 @@ COPY_CMD=ln -s
 
 GW150914_REAL_PATH=$(realpath $(REAL_DATA_PATH)/$(GW150914_RESULT))
 GW200129_REAL_PATH=$(realpath $(REAL_DATA_PATH)/$(GW200129_RESULT))
+GW150914_STATE_FILE_REAL_PATH=$(realpath $(REAL_DATA_PATH)/$(GW150914_STATE_FILE))
 
 PP_TEST_JSD_2DET_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_JSD_RESULT_2DET))
 PP_TEST_JSD_3DET_FULL_PATH=$(realpath $(PP_TESTS_PATH)/$(PP_TEST_JSD_RESULT_3DET))
@@ -66,6 +67,10 @@ $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5:
 $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5:
 	mkdir -p $(RELEASE_PATH)/real_data
 	$(COPY_CMD) "$(GW200129_REAL_PATH)" "$@"
+
+$(RELEASE_PATH)/real_data/GW150914_pocomc_final_state.state:
+	mkdir -p $(RELEASE_PATH)/real_data
+	$(COPY_CMD) "$(GW150914_STATE_FILE_REAL_PATH)" "$@"
 
 .PHONY: real_data
 real_data: $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5 $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5
