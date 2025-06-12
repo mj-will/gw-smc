@@ -1,0 +1,14 @@
+title: Validating Sequential Monte Carlo for Gravitational-wave Inference
+author: Michael J. Williams, Minas Karamanis, and Yilin Luo
+
+execute:
+  execute_notebooks: force
+
+repository:
+  url: https://github.com/mj-will/gw-smc
+  path_to_book: docs
+  branch: main
+
+html:
+  use_issues_button: true
+  use_repository_button: true

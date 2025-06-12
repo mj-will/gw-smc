@@ -1,0 +1,20 @@
+format: jb-book
+root: intro
+chapters:
+  - file: environment
+  - file: data_release
+  - file: smc
+    sections:
+      - file: plotting/temperature_plot
+      - file: plotting/plot_beta
+  - file: simulated_data
+    sections:
+      - file: bbh_analyses
+        sections:
+        - file: plotting/pp_plot
+        - file: plotting/pp_test_jsd
+        - file: plotting/pp_test_comparison
+      - file: bns_analyses
+        sections:
+        - file: plotting/bns_results
+  - file: real_data
