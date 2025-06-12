@@ -1,0 +1,26 @@
+name: gw-smc
+channels:
+ - conda-forge
+dependencies:
+ - python=3.11
+ - numpy
+ - scipy
+ - pytorch-cpu
+ - bilby>=2.5.0
+ - bilby_pipe
+ - jupyter
+ - matplotlib
+ - pesummary
+ - lalsuite
+ - seaborn
+ - h5py
+ - pandas
+ - zuko
+ - zenodo_get
+ - natsort
+ - pip
+ - pip:
+   - sinflow
+   - pocomc-bilby
+   - git+https://github.com/minaskar/pocomc.git@1074b20a8ffad00d03430eb2643fe839ad7360f6
+   - git+https://github.com/mj-will/gw-smc.git
