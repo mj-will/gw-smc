@@ -28,6 +28,12 @@ jobs:
                -L \
                -o data_release/gw_smc_data_release_results.zip \
                https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/gw_smc_data_release_results.zip
+          mkdir p data_release/gw_smc_data_release_data/
+          curl --progress-bar \
+               -H "Authorization: Bearer ${{ secrets.ZENODO_TOKEN }}" \
+               -L \
+               -o data_release/gw_smc_data_release_data/pp_test_injection_file.hdf5 \
+               https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/pp_test_injection_file.hdf5
       - name: Unzip data release
         run: |
             unzip -o data_release/gw_smc_data_release_results.zip -d data_release
