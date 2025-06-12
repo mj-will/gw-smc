@@ -32,6 +32,11 @@ or swap `GW150914` for `GW200129`.
 
 ### Results for GW150914
 
+```{important}
+These figures are generated automatically and may use different random number generation
+compared to the results shown in the paper.
+```
+
 **Intrinsic parameters**
 ```{image} plotting/figures/GW150914_intrinsic.png
 :alt: posterior distribution for GW150914 showing a subset of the intrinsic parameters.
@@ -43,6 +48,11 @@ or swap `GW150914` for `GW200129`.
 ```
 
 ### Results for GW200129
+
+```{important}
+These figures are generated automatically and may use different random number generation
+compared to the results shown in the paper.
+```
 
 **Intrinsic parameters**
 ```{image} plotting/figures/GW200129_intrinsic.png

@@ -8,12 +8,12 @@ The scripts, results files and data and available in two Zenodo records:
 - Scripts:
 - Results files and data:
 
-For more details about the data release, see [data release](./data_release).
+For more details about these records, see the [data release section](./data_release).
 
 ## Sections
 
 ```{tableofcontents}
-:maxdepth: 2
+:maxdepth: 3
 ```
 
 
