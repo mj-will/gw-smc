@@ -2,3 +2,6 @@ jupyter-book
 matplotlib
 numpy
 scipy
+seaborn
+h5py
+pesummary
