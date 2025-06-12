@@ -56,11 +56,14 @@ figures/GW200129_intrinsic.png figures/GW200129_localization.png: $(DATA_RELEASE
 		--extension png
 
 .PHONY: GW150914_plots GW200129_plots
-GW150914_plots: figures/GW150914_intrinsic.pdf figures/GW150914_localization.pdf figures/GW150914_intrinsic.png figures/GW150914_localization.png
-GW200129_plots: figures/GW200129_intrinsic.pdf figures/GW200129_localization.pdf figures/GW200129_intrinsic.png figures/GW200129_localization.png
+GW150914_plots: figures/GW150914_intrinsic.pdf figures/GW150914_localization.pdf
+GW200129_plots: figures/GW200129_intrinsic.pdf figures/GW200129_localization.pdf
 
 .PHONY: event_plots
 event_plots: GW150914_plots GW200129_plots
+
+.PHONY: event_plots_png
+event_plots_png: figures/GW150914_intrinsic.png figures/GW150914_localization.png figures/GW200129_intrinsic.png figures/GW200129_localization.png
 
 %.run: %.ipynb
 	jupyter nbconvert --to notebook --execute --inplace $< && touch $@
