@@ -20,6 +20,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r docs/requirements.txt
+          pip install .
       - name: Download data release from Zenodo
         run: |
           curl --progress-bar \
@@ -29,7 +30,7 @@ jobs:
                https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/gw_smc_data_release_results.zip
       - name: Unzip data release
         run: |
-            unzip -o data_release/gw_smc_data_release_results.zip -d gw_smc_data_release
+            unzip -o data_release/gw_smc_data_release_results.zip -d data_release
       - name: Build the book
         run: |
           cd docs
