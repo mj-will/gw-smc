@@ -13,6 +13,8 @@ classifiers = [
 dependencies = [
     "numpy",
     "scipy",
+    "pesummary",
+    "h5py",
 ]
 dynamic = ["version"]
 
@@ -20,4 +22,3 @@ dynamic = ["version"]
 
 [project.scripts]
 gw_smc_utils_plot_event = "gw_smc_utils.cli.event_plots:main"
-
