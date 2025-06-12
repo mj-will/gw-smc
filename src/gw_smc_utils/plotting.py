@@ -7,12 +7,17 @@ import numpy as np
 import scipy.stats
 from pesummary.gw.plots.latex_labels import GWlatex_labels
 import re
+import shutil
 
 
 def set_style() -> None:
     """Set the plotting style"""
     with importlib.resources.path("gw_smc_utils", "paper.mplstyle") as p:
         plt.style.use(p)
+    # Disable LaTeX rendering if latex is not installed
+    from matplotlib import rcParams
+    rcParams['text.usetex']= True if shutil.which('latex') else False
+
 
 
 def lighten_colour(color, amount=0.5):
