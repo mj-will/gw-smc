@@ -21,6 +21,9 @@ def get_parser():
     parser.add_argument("--data-release-path", type=str, default="data_releases")
     parser.add_argument("--cosmo", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--extension", type=str, default="pdf",
+                        choices=["pdf", "png", "svg", "jpg"],
+                        help="File extension for the output figures.")
     return parser
 
 
@@ -89,7 +92,7 @@ def main():
                 jsd_base_2 = jsd_base_e / np.log(2) * 1000
                 print(f"{parameter}: {jsd_base_2} mbits")
                 axs[i, i].set_title(f"{jsd_base_2:.2f} mbits", fontsize=20)
-            plt.savefig(output / f"{args.SID}_{key}.pdf")
+            plt.savefig(output / f"{args.SID}_{key}.{args.extension}", bbox_inches="tight")
 
 
 if __name__ == "__main__":
