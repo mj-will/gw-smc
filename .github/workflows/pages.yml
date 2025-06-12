@@ -37,7 +37,7 @@ jobs:
       - name: Unzip data release
         run: |
             unzip -o data_release/gw_smc_data_release_results.zip -d data_release
-            unzip -o data_release/gw_smc_data_release_data.zip -d data_release/gw_smc_data_release_data/
+            unzip -o data_release/gw_smc_data_release_data.zip -d data_release
             ls data_release/gw_smc_data_release_results/
             ls data_release/gw_smc_data_release_data/
       - name: Build the book
