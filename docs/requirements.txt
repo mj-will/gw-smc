@@ -5,3 +5,4 @@ scipy
 seaborn
 h5py
 pesummary
+zenodo_get
