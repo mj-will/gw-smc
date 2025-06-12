@@ -10,6 +10,9 @@ The scripts, results files and data and available in two Zenodo records:
 
 For more details about these records, see the [data release section](./data_release).
 
+The sections listed below described how to use the files included in the data
+release to reproduce the figures from the paper and rerun the analyses.
+
 ## Sections
 
 ```{tableofcontents}
