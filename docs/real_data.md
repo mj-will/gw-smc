@@ -89,7 +89,13 @@ Each ini file can be submitted by running:
 bilby_pipe <ini file> --submit
 ```
 
+## Downloading the GWTC data release
 
-## Downloading
+To download the GWTC data releases used for producing plots and running analyses
+run the following in the `gwtc_data_releases` directory of the repository:
 
-For instructions on how to download the data releases, see [GWTC data releases](./gwtc_data_releases/README.md).
+```
+make
+```
+
+This will only download the files that are necessary.

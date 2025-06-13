@@ -1,4 +1,4 @@
-# Sequential Monte Carlo Figures
+# Sequential Monte Carlo figures
 
 We include several figures to help visualize the sequential Monte Carlo algorithm.
 

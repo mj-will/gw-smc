@@ -136,7 +136,7 @@ queue 100
 We include scripts for producing plots similar to those in the paper for your
 own analyses.
 
-### P-P plots
+#### P-P plots
 
 P-P plots can be made using the `pp_test.py` script in this directory. The basic usage is:
 

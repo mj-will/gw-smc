@@ -16,9 +16,7 @@ release to reproduce the figures from the paper and rerun the analyses.
 ## Sections
 
 ```{tableofcontents}
-:maxdepth: 3
 ```
-
 
 ## Citation
 
