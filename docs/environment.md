@@ -1,6 +1,14 @@
 # Environment
 
+All analyses were run using the following code versions:
+
+- [`pocomc`@1074b20](https://github.com/minaskar/pocomc/commit/1074b20a8ffad00d03430eb2643fe839ad7360f6)
+- `pocomc-bilby`@v0.1.0
+
+
 We provide a `YAML` file to create a suitable environment using `conda`.
+
+## Installation
 
 ```{note}
 For instructions on how to install `conda`, see the [`conda` documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html).
