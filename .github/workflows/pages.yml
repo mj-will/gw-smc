@@ -27,6 +27,10 @@ jobs:
       - name: Unzip data release
         run: |
             unzip -o data_release/gw_smc_data_release_core.zip -d data_release
+      - name: Set up Python environment
+        run: |
+          which python
+          conda list
       - name: Build the book
         run: |
           cd docs
