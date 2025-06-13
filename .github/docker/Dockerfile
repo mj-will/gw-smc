@@ -6,7 +6,8 @@ RUN apt-get update && \
         texlive-latex-extra \
         curl \
         unzip \
-        git-lfs && \
+        make \
+        && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
