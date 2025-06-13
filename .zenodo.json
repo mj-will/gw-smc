@@ -1,0 +1,21 @@
+{
+  "title": "Validating Sequential Monte Carlo for Gravitational-wave Inference - Code Release",
+  "creators": [
+    {
+        "name": "Williams, Michael J.",
+        "affiliation": "University of Portsmouth",
+        "orcid": "0000-0002-1825-0097"
+    },
+    {
+        "name": "Karamanis, Minas",
+        "affiliation": "University of California, Berkeley",
+        "orcid": "0000-0001-9489-4612"
+    },
+    {
+        "name": "Luo, Yilin",
+        "affiliation": "School of Physics, Peking University",
+        "orcid": "0000-0002-1234-5678"
+    }
+  ],
+  "keywords": ["gravitational waves", "Bayesian inference", "sequential Monte Carlo"]
+}
