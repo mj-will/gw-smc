@@ -35,6 +35,14 @@ and some additional files for building the `gw_smc_utils` package and managing t
 The results and data are available in a separate [Zenodo record](). We recommend downloading
 this using the scripts provided in the `data_release` directory the code data release.
 
+### Structure
+
+The data release is divided into three parts:
+
+- Core results (`gw_smc_data_release_core`): this contains the only data necessary to reproduce the figures and tables in the paper
+- Additional results (`gw_smc_data_release_additional_results`): this contains additional results that are not needed to reproduce the figures. These include the `bilby` result file for each analysis which contain the posterior samples, run statistics and log-evidence,
+- Data (`gw_smc_data_release_data`): this includes the data files for the binary black hole analyses
+
 ### Downloading the data release
 
 ```{note}
@@ -55,11 +63,3 @@ The included `Makefile` allows you to either download the entire release or only
 ```{important}
 The entire data release is several GBs and may take while to download.
 ```
-
-### Structure
-
-The data release is divided into three parts:
-
-- Core results (`gw_smc_data_release_core`): this contains the only data necessary to reproduce the figures and tables in the paper
-- Additional results (`gw_smc_data_release_additional_results`): this contains additional results that are not needed to reproduce the figures. These include the `bilby` result file for each analysis.
-- Data (`gw_smc_data_release_data`): this includes the data files for the binary black hole analyses
