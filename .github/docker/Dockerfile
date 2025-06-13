@@ -7,6 +7,7 @@ RUN apt-get update && \
         curl \
         unzip \
         make \
+        git-lfs \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
