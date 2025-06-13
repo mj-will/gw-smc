@@ -8,3 +8,4 @@ pesummary
 zenodo_get
 natsort
 bilby[gw]
+pocomc-bilby
