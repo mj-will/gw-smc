@@ -3,8 +3,10 @@ FROM continuumio/miniconda3:latest
 # Install TeX Live and other system packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        texlive-latex-recommended \
         texlive-latex-extra \
         texlive-fonts-recommended \
+        cm-super \
         curl \
         unzip \
         make \
