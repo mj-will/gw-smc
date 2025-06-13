@@ -8,21 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/docs-container:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
           lfs: true
-      - name: Install TeX Live
-        run: sudo apt-get update && sudo apt-get install -y texlive-latex-extra
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r docs/requirements.txt
-          pip install .
       - name: Download data release from Zenodo
         run: |
           curl --progress-bar \
@@ -30,18 +24,9 @@ jobs:
                -L \
                -o data_release/gw_smc_data_release_core.zip \
                https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/gw_smc_data_release_core.zip
-          mkdir p data_release/gw_smc_data_release_data/
-          curl --progress-bar \
-               -H "Authorization: Bearer ${{ secrets.ZENODO_TOKEN }}" \
-               -L \
-               -o data_release/gw_smc_data_release_data.zip \
-               https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/gw_smc_data_release_data.zip
       - name: Unzip data release
         run: |
             unzip -o data_release/gw_smc_data_release_core.zip -d data_release
-            unzip -o data_release/gw_smc_data_release_data.zip -d data_release
-            ls data_release/gw_smc_data_release_core/
-            ls data_release/gw_smc_data_release_data/
       - name: Build the book
         run: |
           cd docs
