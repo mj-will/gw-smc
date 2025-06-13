@@ -35,7 +35,7 @@ this using the scripts provided in the `data_release` directory the code data re
 
 The data release is divided into three parts:
 
-- Core results (`gw_smc_data_release_results`): this contains the only data necessary to reproduce the figures and tables in the paper
+- Core results (`gw_smc_data_release_core`): this contains the only data necessary to reproduce the figures and tables in the paper
 - Additional results (`gw_smc_data_release_additional_results`): this contains additional results that are not needed to reproduce the figures. These include the `bilby` result file for each analysis.
 - Data (`gw_smc_data_release_data`): this includes the data files for the binary black hole analyses
 
