@@ -38,12 +38,16 @@ BNS_JSD_RESULTS_FULL_PATH=$(realpath $(BNS_PATH)/$(BNS_JSD_PATH))
 RESULTS_RELEASE_PATH=$(RELEASE_PATH)/results
 
 .PHONY: data_release
-data_release: real_data pp_tests jsd_results pp_test_injection_file bns_results
+data_release: real_data jsd_results pp_test_injection_file pp_test_credible_levels pp_test_summary_file bns_results
 	@echo "Data release is complete. The data is available in $(RELEASE_PATH)."
 
 .PHONY: data_release_additional
-data_release_additional: bns_additional_results
+data_release_additional: bns_additional_results pp_tests
 	@echo "Additional data release is complete. The additional data is available in $(RELEASE_PATH_ADDITIONAL)."
+
+.PHONY: data_release_data
+data_release_data: pp_test_injection_data
+	@echo "Data release for injection data is complete. The data is available in $(RELEASE_PATH_DATA)."
 
 gw_smc_data_release_core.zip: data_release
 	@echo "Creating zip file..."
@@ -133,6 +137,9 @@ $(RELEASE_PATH)/simulated_data/pp_tests/$(PP_TEST_SUMMARY_FILE):
 	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests
 	$(COPY_CMD) "$(PP_TEST_SUMMARY_FILE_REAL_PATH)" "$@"
 
+.PHONY: pp_test_summary_file
+pp_test_summary_file: $(RELEASE_PATH)/simulated_data/pp_tests/$(PP_TEST_SUMMARY_FILE)
+
 $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results/2det:
 	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/jsd_results
 	$(COPY_CMD) "$(PP_TEST_JSD_2DET_FULL_PATH)" "$@"
@@ -176,8 +183,8 @@ bns_additional_results.zip: bns_additional_results
 	@echo "Creating additional BNS results zip file..."
 	zip -r $@ $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results
 
-$(RELEASE_PATH)/pp_test_injection_file.hdf5:
-	mkdir -p $(RELEASE_PATH)
+$(RELEASE_PATH)/simulated_data/pp_tests/pp_test_injection_file.hdf5:
+	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests
 	@echo $(PP_TEST_INJECTION_FILE_FULL_PATH)
 	$(COPY_CMD) "$(PP_TEST_INJECTION_FILE_FULL_PATH)" "$@"
 
@@ -189,7 +196,7 @@ $(RELEASE_PATH_DATA)/pp_test_injection_data:
 pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_data
 
 .PHONY: pp_test_injection_file
-pp_test_injection_file: $(RELEASE_PATH)/pp_test_injection_file.hdf5
+pp_test_injection_file: $(RELEASE_PATH)/simulated_data/pp_tests/pp_test_injection_file.hdf5
 
 .PHONY: clean
 clean:
