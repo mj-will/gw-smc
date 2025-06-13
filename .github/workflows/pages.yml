@@ -27,15 +27,12 @@ jobs:
       - name: Unzip data release
         run: |
             unzip -o data_release/gw_smc_data_release_core.zip -d data_release
-      - name: Set up Python environment
-        run: |
-          conda activate gw-smc
-          conda list
-        shell: bash -l {0}
       - name: Build the book
         run: |
+          conda activate gw-smc
           cd docs
           make build
+        shell: bash -l {0}
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
