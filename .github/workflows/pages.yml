@@ -29,8 +29,9 @@ jobs:
             unzip -o data_release/gw_smc_data_release_core.zip -d data_release
       - name: Set up Python environment
         run: |
-          which python
+          conda activate gw-smc
           conda list
+        shell: bash -l {0}
       - name: Build the book
         run: |
           cd docs
