@@ -3,6 +3,7 @@
 Script to fetch the PSD from GWTC-2.1/3 data releases and save them in
 <SID>/psds/<key>-psd.dat.
 """
+
 import argparse
 import pathlib
 import h5py
@@ -14,7 +15,9 @@ from gw_smc_utils.results import find_gwtc_results
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--SID", type=str)
-    parser.add_argument("--data-releases", nargs="+", type=str, default=["GWTC-2.1", "GWTC-3"])
+    parser.add_argument(
+        "--data-releases", nargs="+", type=str, default=["GWTC-2.1", "GWTC-3"]
+    )
     parser.add_argument("--data-release-path", type=str, default="data_releases")
     parser.add_argument("--cosmo", action="store_true")
     parser.add_argument("--analysis", type=str, default="C01:IMRPhenomXPHM")
@@ -22,7 +25,6 @@ def get_parser():
 
 
 def main(args):
-
     filepath, release = find_gwtc_results(
         args.data_release_path, args.data_releases, args.SID, args.cosmo
     )

@@ -17,18 +17,23 @@ def get_parser():
     parser.add_argument("--labels", nargs="+", type=str)
     parser.add_argument("--output", type=Path, default=Path("figures"))
     parser.add_argument("--SID", type=str, required=True)
-    parser.add_argument("--data-releases", nargs="+", type=str, default=["GWTC-2.1", "GWTC-3"])
+    parser.add_argument(
+        "--data-releases", nargs="+", type=str, default=["GWTC-2.1", "GWTC-3"]
+    )
     parser.add_argument("--data-release-path", type=str, default="data_releases")
     parser.add_argument("--cosmo", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--extension", type=str, default="pdf",
-                        choices=["pdf", "png", "svg", "jpg"],
-                        help="File extension for the output figures.")
+    parser.add_argument(
+        "--extension",
+        type=str,
+        default="pdf",
+        choices=["pdf", "png", "svg", "jpg"],
+        help="File extension for the output figures.",
+    )
     return parser
 
 
 def main():
-
     parser = get_parser()
     args = parser.parse_args()
 
@@ -43,7 +48,11 @@ def main():
     output = args.output
     output.mkdir(exist_ok=True, parents=True)
 
-    labels = args.labels if args.labels else [f"result_{i}" for i in range(len(args.results))]
+    labels = (
+        args.labels
+        if args.labels
+        else [f"result_{i}" for i in range(len(args.results))]
+    )
 
     results = {}
 
@@ -52,26 +61,29 @@ def main():
 
     n_samples = 10_000
 
-    samples = MultiAnalysisSamplesDict({
-        release: lvk_result.samples_dict[analysis_key].downsample(n_samples),
-        **{k: v.samples_dict.downsample(n_samples) for k, v in results.items()}
-    })
+    samples = MultiAnalysisSamplesDict(
+        {
+            release: lvk_result.samples_dict[analysis_key].downsample(n_samples),
+            **{k: v.samples_dict.downsample(n_samples) for k, v in results.items()},
+        }
+    )
 
     plot_parameters = {
         "intrinsic": ["mass_1_source", "mass_2_source", "chi_eff", "chi_p"],
         "localization": ["ra", "dec", "luminosity_distance", "theta_jn"],
     }
 
-    with plt.rc_context({
-        "legend.fontsize": 24,
-        "axes.labelsize": 24,
-        "xtick.labelsize": 20,
-        "ytick.labelsize": 20,
-    }):
+    with plt.rc_context(
+        {
+            "legend.fontsize": 24,
+            "axes.labelsize": 24,
+            "xtick.labelsize": 20,
+            "ytick.labelsize": 20,
+        }
+    ):
         for key, parameters in plot_parameters.items():
-
             corner_kwargs = dict(
-                levels=(1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.)),
+                levels=(1 - np.exp(-0.5), 1 - np.exp(-2), 1 - np.exp(-9 / 2.0)),
                 label_kwargs=dict(fontsize=24),
                 bins=32,
             )
@@ -92,7 +104,9 @@ def main():
                 jsd_base_2 = jsd_base_e / np.log(2) * 1000
                 print(f"{parameter}: {jsd_base_2} mbits")
                 axs[i, i].set_title(f"{jsd_base_2:.2f} mbits", fontsize=20)
-            plt.savefig(output / f"{args.SID}_{key}.{args.extension}", bbox_inches="tight")
+            plt.savefig(
+                output / f"{args.SID}_{key}.{args.extension}", bbox_inches="tight"
+            )
 
 
 if __name__ == "__main__":

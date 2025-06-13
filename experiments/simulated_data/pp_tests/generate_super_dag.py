@@ -8,10 +8,7 @@ import shutil
 
 def get_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "base_ini",
-        type=str
-    )
+    parser.add_argument("base_ini", type=str)
     parser.add_argument(
         "--outdir",
         type=str,
@@ -46,11 +43,7 @@ def get_parser():
         type=float,
         default=1364342930,
     )
-    parser.add_argument(
-        "--detectors",
-        nargs="+",
-        default=["H1", "V1", "L1"]
-    )
+    parser.add_argument("--detectors", nargs="+", default=["H1", "V1", "L1"])
     parser.add_argument(
         "--n-injections",
         type=int,
@@ -60,11 +53,7 @@ def get_parser():
         "--submit",
         action="store_true",
     )
-    parser.add_argument(
-        "--superdag-name",
-        type=str,
-        default="gwsmc_superdag"
-    )
+    parser.add_argument("--superdag-name", type=str, default="gwsmc_superdag")
     return parser
 
 
@@ -80,8 +69,9 @@ def tmp_working_dir(path):
 
 
 def main(args):
-
-    injections = pd.read_hdf(args.injection_file, key="injections").iloc[:args.n_injections]
+    injections = pd.read_hdf(args.injection_file, key="injections").iloc[
+        : args.n_injections
+    ]
 
     os.makedirs(args.outdir, exist_ok=True)
 
@@ -91,18 +81,19 @@ def main(args):
     print(f"Output directory: {args.outdir}")
 
     for i, injection in enumerate(injections.to_dict(orient="records")):
-
-        snrs = {
-            det: injection[f"{det}_snr"] for det in args.detectors
-        }
+        snrs = {det: injection[f"{det}_snr"] for det in args.detectors}
 
         data_dict = [
-            f"{det}:" + os.path.join(os.path.abspath(args.data_dir), f"injection_{i}_{det}_{int(args.start_time)}_{args.end_time}.hdf5")
+            f"{det}:"
+            + os.path.join(
+                os.path.abspath(args.data_dir),
+                f"injection_{i}_{det}_{int(args.start_time)}_{args.end_time}.hdf5",
+            )
             for det in args.detectors
         ]
 
         arguments = {
-            "data-dict": "'{" + ','.join(data_dict) + "}'",
+            "data-dict": "'{" + ",".join(data_dict) + "}'",
             "outdir": f"injection_{i}",
             "trigger-time": injection["injection_time"],
             "prior-file": "analysis_priors.prior",
@@ -116,7 +107,9 @@ def main(args):
             arguments["time-reference"] = "geocent"
 
         shutil.copyfile(args.base_ini, os.path.join(args.outdir, "base.ini"))
-        shutil.copyfile(args.prior_file, os.path.join(args.outdir, "analysis_priors.prior"))
+        shutil.copyfile(
+            args.prior_file, os.path.join(args.outdir, "analysis_priors.prior")
+        )
 
         with tmp_working_dir(args.outdir):
             # Call bilby_pipe with correct ini file
@@ -127,7 +120,9 @@ def main(args):
 
         # File the dag file that starts with dag and ends with .submit
         dag_file = [
-            f for f in os.listdir(os.path.join(args.outdir, f"injection_{i}", "submit")) if f.startswith("dag") and f.endswith(".submit")
+            f
+            for f in os.listdir(os.path.join(args.outdir, f"injection_{i}", "submit"))
+            if f.startswith("dag") and f.endswith(".submit")
         ][0]
         dags.append(os.path.join(f"injection_{i}", "submit", dag_file))
 

@@ -3,6 +3,7 @@
 
 Note this code is not optimized and may take several hours to run.
 """
+
 import argparse
 import os
 import json
@@ -52,16 +53,23 @@ PARAMETERS = [
     "chi_2",
 ]
 
+
 def find_result_file_pairs(directory, samplers, prefix, run_labels):
     paths = {}
     for sampler, label in zip(samplers, run_labels):
         print(sampler, label)
-        paths[sampler] = list(Path(directory).glob(f"{prefix}*{sampler}*{label}/**/final_result/{sampler}*.hdf5"))
+        paths[sampler] = list(
+            Path(directory).glob(
+                f"{prefix}*{sampler}*{label}/**/final_result/{sampler}*.hdf5"
+            )
+        )
     print(paths)
     labels = {}
     for i, sampler in enumerate(samplers):
         labels[sampler] = {"2det": [], "3det": []}
-        raw_labels = [path.parents[1].name.split(sampler)[-1] for path in paths[sampler]]
+        raw_labels = [
+            path.parents[1].name.split(sampler)[-1] for path in paths[sampler]
+        ]
         # Search for number of detectors (e.g. 2det or 3det)
         for rl in raw_labels:
             n_det = re.search(r"\d+det", rl).group(0)
@@ -76,28 +84,36 @@ def find_result_file_pairs(directory, samplers, prefix, run_labels):
                 labels[sampler][n_det].append(label)
             else:
                 raise ValueError(f"Unknown number of detectors: {n_det}")
-    
+
     result_file_pairs = []
     for n_det in ["2det", "3det"]:
-        all_labels = set(labels[samplers[0]][n_det]).intersection(set(labels[samplers[1]][n_det]))
+        all_labels = set(labels[samplers[0]][n_det]).intersection(
+            set(labels[samplers[1]][n_det])
+        )
         for label in all_labels:
             det_label = f"{n_det}_{label}"
             pattern = re.compile(rf".*{n_det}_{label}.*")
-            pair = {det_label: (
-                *[p for p in paths[samplers[0]] if pattern.match(p.name)],
-                *[p for p in paths[samplers[1]] if pattern.match(p.name)],
-            )}
+            pair = {
+                det_label: (
+                    *[p for p in paths[samplers[0]] if pattern.match(p.name)],
+                    *[p for p in paths[samplers[1]] if pattern.match(p.name)],
+                )
+            }
             if len(pair[det_label]) != 2:
                 print(f"Could not find a pair for {n_det}_{label}")
                 continue
             result_file_pairs.append(pair)
-        extra = set(labels[samplers[0]][n_det]).symmetric_difference(set(labels[samplers[1]][n_det]))
+        extra = set(labels[samplers[0]][n_det]).symmetric_difference(
+            set(labels[samplers[1]][n_det])
+        )
         if extra:
             print(f"Missing some results for {n_det}: {extra}")
     return result_file_pairs
 
 
-def compute_js(result_files, filename, base, seed, verbose, n_samples, n_tests, n_pool, rng):
+def compute_js(
+    result_files, filename, base, seed, verbose, n_samples, n_tests, n_pool, rng
+):
     jsd = {
         "res1": str(result_files[0]),
         "res2": str(result_files[1]),
@@ -121,6 +137,7 @@ def compute_js(result_files, filename, base, seed, verbose, n_samples, n_tests, 
 
     else:
         from multiprocessing.dummy import Pool
+
         n_pool = 1
 
     with Pool(n_pool) as pool:
@@ -130,7 +147,7 @@ def compute_js(result_files, filename, base, seed, verbose, n_samples, n_tests, 
                     print(f"Key {key} not found in post1, skipping")
                 else:
                     print(f"Calculating JSD for {key}")
-            
+
             if key not in post1 or key not in post2:
                 continue
 
@@ -183,14 +200,15 @@ def main(
     n_tests: int = 10,
     n_pool: int | None = None,
 ):
-
     run_labels = [parse_label(label) for label in run_labels]
 
     if args.results:
         result_file_pairs = [{args.label: args.results}]
         print(result_file_pairs)
     else:
-        result_file_pairs = find_result_file_pairs(directory, samplers, prefix, run_labels)
+        result_file_pairs = find_result_file_pairs(
+            directory, samplers, prefix, run_labels
+        )
         print(f"Found {len(result_file_pairs)} result file pairs")
     if not result_file_pairs:
         print("No result file pairs found")

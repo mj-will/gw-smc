@@ -2,7 +2,10 @@ import pathlib
 
 
 def find_gwtc_results(
-    data_release_path, data_releases, event, cosmo,
+    data_release_path,
+    data_releases,
+    event,
+    cosmo,
 ):
     for release in data_releases:
         if cosmo:

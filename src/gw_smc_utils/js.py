@@ -3,6 +3,7 @@ Code to calculate the JS divergence between samples.
 
 Based on the code used in https://doi.org/10.5281/zenodo.8124198
 """
+
 from functools import partial
 from itertools import starmap
 
@@ -22,9 +23,7 @@ def calc_median_error(jsvalues, quantiles=(0.16, 0.84)):
     return median, plus, minus
 
 
-def _compute_js(
-    samplesA, samplesB, xsteps=1000, base=2, **kwargs
-):
+def _compute_js(samplesA, samplesB, xsteps=1000, base=2, **kwargs):
     xmin = max(np.min(samplesA), np.min(samplesB))
     xmax = min(np.max(samplesA), np.max(samplesB))
     x = np.linspace(xmin, xmax, xsteps)
@@ -45,14 +44,15 @@ def calculate_js(
     pool=None,
     **kwargs,
 ):
-
     min_samples = min(len(samplesA), len(samplesB))
     if n_samples is None:
         n_samples = min_samples
         if verbose:
             print(f"Using all samples ({n_samples})")
     elif n_samples > min_samples:
-        print("Warning: n_samples is greater than the number of samples in one of the datasets. Using all samples.")
+        print(
+            "Warning: n_samples is greater than the number of samples in one of the datasets. Using all samples."
+        )
         print(f"Samples A = {len(samplesA)}, Samples B = {len(samplesB)}")
         n_samples = min_samples
 
@@ -64,14 +64,12 @@ def calculate_js(
     else:
         map_fn = starmap
 
-    samples_a = np.array([
-        rng.choice(samplesA, size=(n_samples), replace=False)
-        for _ in range(n_tests)
-    ])
-    samples_b = np.array([
-        rng.choice(samplesB, size=(n_samples), replace=False)
-        for _ in range(n_tests)
-    ])
+    samples_a = np.array(
+        [rng.choice(samplesA, size=(n_samples), replace=False) for _ in range(n_tests)]
+    )
+    samples_b = np.array(
+        [rng.choice(samplesB, size=(n_samples), replace=False) for _ in range(n_tests)]
+    )
 
     map_kwargs = kwargs.copy()
     map_kwargs["xsteps"] = xsteps

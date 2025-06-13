@@ -3,6 +3,7 @@
 
 Note this code is not optimized and may take several hours to run.
 """
+
 import argparse
 import os
 import json
@@ -62,7 +63,6 @@ def main(
     use_pesummary: bool = False,
     xsteps: int = 100,
 ):
-
     os.makedirs("results", exist_ok=True)
 
     rng = np.random.default_rng(seed)
@@ -101,6 +101,7 @@ def main(
 
     else:
         from multiprocessing.dummy import Pool
+
         n_pool = 1
 
     with Pool(n_pool) as pool:
@@ -140,13 +141,12 @@ def main(
                     xsteps=xsteps,
                 )
             else:
-
                 from pesummary.utils.utils import jensen_shannon_divergence_from_samples
 
                 samples = [post1[key], post2[key]]
                 jsd["jsd"][key] = jensen_shannon_divergence_from_samples(
                     samples=samples,
-                    base=base, 
+                    base=base,
                 )
 
     dir = os.path.split(filename)[0]

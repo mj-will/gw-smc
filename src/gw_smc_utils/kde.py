@@ -9,7 +9,7 @@ from pesummary.utils.bounded_1d_kde import (
 
 def vonmises_kernel(x: np.ndarray, mu: np.ndarray, nu: float):
     """Von Mises kernel for KDEs"""
-    return np.exp(nu*np.cos(x-mu)).sum(1)/(2*np.pi*i0(nu))
+    return np.exp(nu * np.cos(x - mu)).sum(1) / (2 * np.pi * i0(nu))
 
 
 def estimate_kappa(angles, kappa_range, n_points: int = 100):
@@ -57,12 +57,9 @@ class PeriodicBoundedKDE:
         self._n = 2
         self.bandwidth_method = bandwidth_method
         if not estimate_bandwidth and kappa is None:
-            raise ValueError(
-                "kappa must be provided if estimate_bandwidth is False"
-            )
-        self.kappa = (
-            kappa
-            or estimate_kappa(self.pts_scale, kappa_range, n_kappa_points)
+            raise ValueError("kappa must be provided if estimate_bandwidth is False")
+        self.kappa = kappa or estimate_kappa(
+            self.pts_scale, kappa_range, n_kappa_points
         )
         self.nu = self.bandwidth(self.kappa)
 
@@ -71,10 +68,12 @@ class PeriodicBoundedKDE:
         if self.bandwidth_method == "rot":
             return (
                 (k * self._n * (2 * iv(1, 2 * k) + 3 * k * iv(2, 2 * k)))
-                / (4 * np.pi**0.5 * iv(0, k)**2)
-            )**0.4
+                / (4 * np.pi**0.5 * iv(0, k) ** 2)
+            ) ** 0.4
         elif self.bandwidth_method == "taylor":
-            return ((3 * self._n * k**2 * iv(2, 2 * k)) / (4 * np.pi**0.5 * iv(0, k)**2))**0.4
+            return (
+                (3 * self._n * k**2 * iv(2, 2 * k)) / (4 * np.pi**0.5 * iv(0, k) ** 2)
+            ) ** 0.4
         else:
             raise ValueError(f"Unknown bandwidth method: {self.bandwidth_method}")
 
@@ -122,10 +121,5 @@ def fit_kde(
     if boundary_type != "periodic":
         kwargs["bw_method"] = bw_method
 
-    kde = KDEClass(
-        samples,
-        xlow=lower_bound,
-        xhigh=upper_bound,
-        **kwargs
-    )
+    kde = KDEClass(samples, xlow=lower_bound, xhigh=upper_bound, **kwargs)
     return kde

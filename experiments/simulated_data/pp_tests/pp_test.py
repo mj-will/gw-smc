@@ -6,6 +6,7 @@ probability test.
 Searches recursively for directories called `final_result` that contain
 files with the specified extension.
 """
+
 import argparse
 import os
 import numpy as np
@@ -25,15 +26,18 @@ def get_injection_credible_level(result, parameter, injection_parameters, weight
         weights = np.ones(len(result.posterior[parameter]))
     if parameter not in injection_parameters:
         raise ValueError(f"Parameter {parameter} not found in injections")
-    credible_level = (
-        np.sum(np.array(result.posterior[parameter] < injection_parameters[parameter]) * weights) / np.sum(weights)
-    )
+    credible_level = np.sum(
+        np.array(result.posterior[parameter] < injection_parameters[parameter])
+        * weights
+    ) / np.sum(weights)
     return credible_level
 
 
 def get_all_credible_levels(result, injection_parameters, keys, weights=None):
     return {
-        key: get_injection_credible_level(result, key, injection_parameters, weights=weights)
+        key: get_injection_credible_level(
+            result, key, injection_parameters, weights=weights
+        )
         for key in keys
     }
 
@@ -101,7 +105,6 @@ def discover_result_files(result_dir, extension):
 
 
 def main(args):
-
     set_style()
 
     injection_parameters = pd.read_hdf(args.injection_file, key="injections")

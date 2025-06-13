@@ -2,6 +2,7 @@
 
 These require standard tests to have been run first.
 """
+
 import argparse
 import glob
 import string
@@ -47,7 +48,9 @@ def main():
     with open(args.config_file, "r") as f:
         config = yaml.safe_load(f)
 
-    data_dump_files = natsort.natsorted(glob.glob(f"{config['data_dump_dir']}/*.pickle"))
+    data_dump_files = natsort.natsorted(
+        glob.glob(f"{config['data_dump_dir']}/*.pickle")
+    )
 
     if args.indices is not None and args.n_injections is not None:
         raise ValueError("Cannot specify both indices and n_injections")
@@ -55,10 +58,10 @@ def main():
     if args.indices is not None:
         data_dump_files = [data_dump_files[i] for i in args.indices]
     elif args.n_injections is not None:
-        data_dump_files = data_dump_files[:args.n_injections]
+        data_dump_files = data_dump_files[: args.n_injections]
 
     for ddf in tqdm.tqdm(data_dump_files):
-        match = re.search(r'data(\d+)_', ddf)
+        match = re.search(r"data(\d+)_", ddf)
         if match:
             i = int(match.group(1))
         else:
@@ -124,6 +127,7 @@ def main():
 
         if args.sleep_time > 0:
             import time
+
             time.sleep(args.sleep_time)
 
 

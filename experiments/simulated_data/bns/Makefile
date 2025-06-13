@@ -1,7 +1,7 @@
 include config.mk
 
 .PHONY: submit_all
-submit_all : 
+submit_all :
 	bash submit_all.sh
 
 outdir%/final_result/corner.png: outdir%/final_result/*.hdf5 plot_single_result.py

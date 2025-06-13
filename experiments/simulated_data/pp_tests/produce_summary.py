@@ -1,4 +1,5 @@
 """Summarize the run statistics for the P-P test runs"""
+
 import argparse
 from pathlib import Path
 import numpy as np
@@ -9,37 +10,35 @@ import h5py
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--input-dirs', type=Path, default=Path('.'), nargs='+', required=True,
+        "--input-dirs",
+        type=Path,
+        default=Path("."),
+        nargs="+",
+        required=True,
         help="Input directory containing the P-P test results",
     )
     parser.add_argument(
-        '--output-dir', type=Path, default=Path('.'),
+        "--output-dir",
+        type=Path,
+        default=Path("."),
         help="Output directory for the renamed files",
     )
     parser.add_argument(
-        "--filename", type=str, default="pp_test_results_summary.hdf5",
-    )
-    parser.add_argument(
-        '--verbose', action='store_true',
-        help="Enable verbose output"
-    )
-    parser.add_argument(
-        '--prefix',
+        "--filename",
         type=str,
-        default="outdir",
-        help="Prefix for the output directories"
+        default="pp_test_results_summary.hdf5",
+    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument(
+        "--prefix", type=str, default="outdir", help="Prefix for the output directories"
     )
     parser.add_argument(
-        "--n-injections",
-        type=int,
-        default=100,
-        help="Number of injections to process"
+        "--n-injections", type=int, default=100, help="Number of injections to process"
     )
     return parser
 
 
 def main(args):
-
     data = {}
     for path in args.input_dirs:
         if "dynesty" in path.name:
@@ -65,7 +64,9 @@ def main(args):
         }
         for i in range(n_injections):
             try:
-                result_file = next((path / f"injection_{i}" / "final_result").glob("*.hdf5"))
+                result_file = next(
+                    (path / f"injection_{i}" / "final_result").glob("*.hdf5")
+                )
             except StopIteration:
                 raise FileNotFoundError(
                     f"No result file found for injection {i} in {path}"
@@ -73,7 +74,9 @@ def main(args):
             with h5py.File(result_file, "r") as f:
                 if sampler == "dynesty":
                     data[sampler][det]["sampling_time"][i] = f["sampling_time"][()]
-                data[sampler][det]["likelihood_evaluations"][i] = f["num_likelihood_evaluations"][()]
+                data[sampler][det]["likelihood_evaluations"][i] = f[
+                    "num_likelihood_evaluations"
+                ][()]
                 data[sampler][det]["n_samples"][i] = len(f["posterior/mass_ratio"][()])
                 data[sampler][det]["log_evidence"][i] = f["log_evidence"][()]
                 data[sampler][det]["log_evidence_error"][i] = f["log_evidence_err"][()]
@@ -82,7 +85,11 @@ def main(args):
                 # Get the sampling time from the sampling_time.dat file
                 # This is a bit of a hack, but it works for now
                 try:
-                    timing_file = next((path / f"injection_{i}" / "result").glob("pocomc*/sampling_time.dat"))
+                    timing_file = next(
+                        (path / f"injection_{i}" / "result").glob(
+                            "pocomc*/sampling_time.dat"
+                        )
+                    )
                 except StopIteration:
                     continue
                 data[sampler][det]["sampling_time"][i] = np.loadtxt(timing_file)

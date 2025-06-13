@@ -8,30 +8,25 @@ def get_parser():
         description="Fetch and rename result files from P-P test experiment directories."
     )
     parser.add_argument(
-        '--input-dir', type=Path,
+        "--input-dir",
+        type=Path,
         help="Input directory containing the P-P test results",
     )
+    parser.add_argument("--label", type=str, help="Label used for the new files")
     parser.add_argument(
-        '--label', type=str,
-        help="Label used for the new files"
-    )
-    parser.add_argument(
-        '--output-dir', type=Path,
+        "--output-dir",
+        type=Path,
         help="Output directory for the renamed files",
     )
-    parser.add_argument(
-        '--verbose', action='store_true',
-        help="Enable verbose output"
-    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     return parser
 
 
 def main():
-
     parser = get_parser()
     args = parser.parse_args()
 
-    injection_dirs = sorted(args.input_dir.glob('injection_*'))
+    injection_dirs = sorted(args.input_dir.glob("injection_*"))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -39,7 +34,7 @@ def main():
         parser.error(f"No injection directories found in '{args.input_dir}'.")
 
     for inj_dir in injection_dirs:
-        final_result_dir = inj_dir / 'final_result'
+        final_result_dir = inj_dir / "final_result"
         if not final_result_dir.is_dir():
             if args.verbose:
                 print(f"Skipping {inj_dir}: no final_result directory.")
@@ -72,7 +67,9 @@ def main():
             pocomc_dir = pocomc_dirs[0]
             sampling_time_file = (pocomc_dir / "sampling_time.dat").resolve()
             if sampling_time_file.is_file():
-                out_sampling_time_path = args.output_dir / f"sampling_time_pocomc_{inj_dir.name}.dat"
+                out_sampling_time_path = (
+                    args.output_dir / f"sampling_time_pocomc_{inj_dir.name}.dat"
+                )
                 if args.verbose:
                     print(f"Linking {sampling_time_file} to {out_sampling_time_path}")
                 out_sampling_time_path.symlink_to(sampling_time_file)

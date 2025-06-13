@@ -6,7 +6,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.signal.windows import tukey
-from tqdm.auto import trange
 
 import gwpy.timeseries as ts
 from gwpy.detector import Channel
@@ -89,7 +88,7 @@ def create_parser():
         "--waveform-approximant",
         type=str,
         default="IMRPhenomXPHM",
-        help="Waveform approximant to use."
+        help="Waveform approximant to use.",
     )
     parser.add_argument("--seed", type=int)
     parser.add_argument(
@@ -161,9 +160,9 @@ def load_injections(args):
     )
     if os.path.isfile(args.injection_file):
         ext = Path(args.injection_file).suffix[1:]
-        injections = load_functions[ext](
-            args.injection_file, key="injections"
-        ).iloc[: args.n_injections]
+        injections = load_functions[ext](args.injection_file, key="injections").iloc[
+            : args.n_injections
+        ]
     elif args.injection_prior is not None:
         injection_prior = BBHPriorDict(filename=args.injection_prior)
         injection_prior["geocent_time"] = Uniform(args.start_time, args.end_time)
@@ -212,9 +211,7 @@ def do_injection(ifos, injection, channels, strain, args):
         closest_idx = np.argmin(abs(ifo_strain.xindex.value - inj.xindex.value[0]))
         delta_time = ifo_strain.xindex.value[closest_idx] - inj.xindex.value[0]
         times += delta_time
-        inj = ts.TimeSeries(
-            signal, times=times, channel=channel, name=channel_name
-        )
+        inj = ts.TimeSeries(signal, times=times, channel=channel, name=channel_name)
         ifo_strain = ifo_strain.inject(inj)
         times -= time_delay + delta_time
         strain_with_inj[ifo.name] = ifo_strain
@@ -249,7 +246,6 @@ def main():
     injections = load_injections(args)
 
     for inj_id, injection in enumerate(injections.to_dict(orient="records")):
-
         ifos = InterferometerList(args.interferometers)
         for ifo in ifos:
             ifo.minimum_frequency = 10
@@ -263,13 +259,15 @@ def main():
                     maximum_frequency=ifo.maximum_frequency,
                     n_points=10,
                 )
-                cal_priors.update(CalibrationPriorDict.from_envelope_file(
-                    envelope_file=cal_dict[ifo.name],
-                    minimum_frequency=ifo.minimum_frequency,
-                    maximum_frequency=ifo.maximum_frequency,
-                    n_nodes=10,
-                    label=ifo.name,
-                ))
+                cal_priors.update(
+                    CalibrationPriorDict.from_envelope_file(
+                        envelope_file=cal_dict[ifo.name],
+                        minimum_frequency=ifo.minimum_frequency,
+                        maximum_frequency=ifo.maximum_frequency,
+                        n_nodes=10,
+                        label=ifo.name,
+                    )
+                )
             else:
                 logger.debug(f"Skipping calibration for {ifo}")
         channels = {ifo.name: ":".join([ifo.name, base_channel_name]) for ifo in ifos}
@@ -279,7 +277,9 @@ def main():
             cal_injection_parameters = cal_priors.sample(len(injections))
             for key in cal_injection_parameters:
                 injections[key] = cal_injection_parameters[key]
-            pd.DataFrame(cal_injection_parameters).to_hdf(args.injection_file, key="calibration")
+            pd.DataFrame(cal_injection_parameters).to_hdf(
+                args.injection_file, key="calibration"
+            )
 
         if not args.zero_noise:
             ifos.set_strain_data_from_power_spectral_densities(
@@ -319,6 +319,7 @@ def main():
             file_name = f"{base_name}.{args.format}"
             logger.info(f"Saving {file_name}")
             strain[ifo.name].write(file_name, format=args.format)
+
 
 if __name__ == "__main__":
     main()

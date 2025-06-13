@@ -1,11 +1,5 @@
-import glob
-from copy import deepcopy
-
 import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import pandas as pd
-from attrs import define
 from tqdm.auto import trange
 
 import bilby
@@ -43,7 +37,7 @@ wfg = bilby.gw.waveform_generator.WaveformGenerator(
         waveform_approximant="IMRPhenomXPHM",
         reference_frequency=20,
         minimum_frequency=5,
-    )
+    ),
 )
 
 n_samples = 100
@@ -58,10 +52,8 @@ for ii in trange(n_samples):
     params = dict(samples.iloc[ii])
     wf = wfg.frequency_domain_strain(params)
     for ifo in ifos:
-        signal = ifo.get_detector_response(
-            waveform_polarizations=wf, parameters=params
-        )
-        snrs[ifo.name][ii] = np.real(ifo.optimal_snr_squared(signal))**0.5
+        signal = ifo.get_detector_response(waveform_polarizations=wf, parameters=params)
+        snrs[ifo.name][ii] = np.real(ifo.optimal_snr_squared(signal)) ** 0.5
 snrs["network"] = np.linalg.norm([snrs[ifo.name] for ifo in ifos], axis=0)
 
 print(
