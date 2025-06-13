@@ -8,7 +8,7 @@ from the paper and run the analyses, the [data release documentation](http://gw-
 
 ## Installation
 
-See the [environment] section of the [data release documentation](http://gw-smc.michaeljwilliams.me/environment.html)
+See the [environment section](http://gw-smc.michaeljwilliams.me/) of the data release documentation.
 
 ## Citation
 
