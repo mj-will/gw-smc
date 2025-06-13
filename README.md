@@ -1,5 +1,7 @@
 # Validating Sequential Monte Carlo for Gravitational-wave Inference - Code release
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15657235.svg)](https://doi.org/10.5281/zenodo.15657235)
+
 This repository contains code to reproduce all the of analyses described in
 *Validating Sequential Monte Carlo for Gravitational-wave Inference*.
 

@@ -5,7 +5,7 @@ It includes code to reproduce each for the figures from the paper and instructio
 
 The scripts, results files and data and available in two Zenodo records:
 
-- Scripts:
+- Scripts: https://zenodo.org/records/15657235
 - Results files and data:
 
 For more details about these records, see the [data release section](./data_release).

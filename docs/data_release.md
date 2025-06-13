@@ -6,7 +6,7 @@ downloaded.
 ## Code release
 
 The code for reproducing the figures and performing the analyses are available in
-a [Zenodo record]() and on [GitHub](https://github.com/mj-will/gw-smc).
+a [Zenodo record](https://zenodo.org/records/15657235) and on [GitHub](https://github.com/mj-will/gw-smc).
 
 The GitHub repository can be clone by running:
 
