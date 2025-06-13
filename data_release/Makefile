@@ -38,14 +38,14 @@ BNS_JSD_RESULTS_FULL_PATH=$(realpath $(BNS_PATH)/$(BNS_JSD_PATH))
 RESULTS_RELEASE_PATH=$(RELEASE_PATH)/results
 
 .PHONY: data_release
-data_release: real_data pp_tests jsd_results pp_test_injection_data bns_results
+data_release: real_data pp_tests jsd_results pp_test_injection_file bns_results
 	@echo "Data release is complete. The data is available in $(RELEASE_PATH)."
 
 .PHONY: data_release_additional
 data_release_additional: bns_additional_results
 	@echo "Additional data release is complete. The additional data is available in $(RELEASE_PATH_ADDITIONAL)."
 
-gw_smc_data_release_results.zip: data_release
+gw_smc_data_release_core.zip: data_release
 	@echo "Creating zip file..."
 	zip -r $@ $(RELEASE_PATH)
 
@@ -58,7 +58,7 @@ gw_smc_data_release_additional_results.zip: data_release_additional
 	zip -r $@ $(RELEASE_PATH_ADDITIONAL)
 
 .PHONY: zip_files
-zip_files: gw_smc_data_release_results.zip gw_smc_data_release_data.zip gw_smc_data_release_additional_results.zip
+zip_files: gw_smc_data_release_core.zip gw_smc_data_release_data.zip gw_smc_data_release_additional_results.zip
 
 $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5:
 	mkdir -p $(RELEASE_PATH)/real_data
@@ -73,7 +73,7 @@ $(RELEASE_PATH)/real_data/GW150914_pocomc_final_state.state:
 	$(COPY_CMD) "$(GW150914_STATE_FILE_REAL_PATH)" "$@"
 
 .PHONY: real_data
-real_data: $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5 $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5
+real_data: $(RELEASE_PATH)/real_data/GW150914_bilby_result_pocomc.hdf5 $(RELEASE_PATH)/real_data/GW200129_bilby_result_pocomc.hdf5 $(RELEASE_PATH)/real_data/GW150914_pocomc_final_state.state
 
 $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels/pp_test_credible_levels_pocomc_2det.hdf5:
 	mkdir -p $(RELEASE_PATH)/simulated_data/pp_tests/credible_levels
@@ -176,8 +176,8 @@ bns_additional_results.zip: bns_additional_results
 	@echo "Creating additional BNS results zip file..."
 	zip -r $@ $(RELEASE_PATH_ADDITIONAL)/simulated_data/bns_results
 
-$(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5:
-	mkdir -p $(RELEASE_PATH_DATA)
+$(RELEASE_PATH)/pp_test_injection_file.hdf5:
+	mkdir -p $(RELEASE_PATH)
 	@echo $(PP_TEST_INJECTION_FILE_FULL_PATH)
 	$(COPY_CMD) "$(PP_TEST_INJECTION_FILE_FULL_PATH)" "$@"
 
@@ -186,10 +186,12 @@ $(RELEASE_PATH_DATA)/pp_test_injection_data:
 	$(COPY_CMD) "$(PP_TEST_INJECTION_DATA_PATH_FULL_PATH)" "$@"
 
 .PHONY: pp_test_injection_data
-pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_file.hdf5 $(RELEASE_PATH_DATA)/pp_test_injection_data
+pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_data
 
+.PHONY: pp_test_injection_file
+pp_test_injection_file: $(RELEASE_PATH)/pp_test_injection_file.hdf5
 
 .PHONY: clean
 clean:
 	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA) $(RELEASE_PATH_ADDITIONAL)
-	rm -f gw_smc_data_release_data.zip gw_smc_data_release_results.zip
+	rm -f gw_smc_data_release_*.zip
