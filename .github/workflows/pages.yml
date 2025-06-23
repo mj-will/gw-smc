@@ -19,8 +19,10 @@ jobs:
           lfs: true
       - name: Download data release from Zenodo
         run: |
+          conda activate gw-smc
           cd data_release
           make download_core
+        shell: bash -l {0}
       - name: Build the book
         run: |
           conda activate gw-smc
