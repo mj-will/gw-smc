@@ -14,6 +14,10 @@
     {
         "name": "Luo, Yilin",
         "affiliation": "School of Physics, Peking University"
+    },
+    {
+        "name": "Seljak, Uros",
+        "affiliation": "University of California, Berkeley"
     }
   ],
   "keywords": ["gravitational waves", "Bayesian inference", "sequential Monte Carlo"]
