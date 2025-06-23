@@ -32,7 +32,7 @@ and some additional files for building the `gw_smc_utils` package and managing t
 
 ## Results and data
 
-The results and data are available in a separate [Zenodo record](). We recommend downloading
+The results and data are available in a separate [Zenodo record](https://doi.org/10.5281/zenodo.15651282). We recommend downloading
 this using the scripts provided in the `data_release` directory the code data release.
 
 ### Structure
