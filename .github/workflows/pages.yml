@@ -19,14 +19,8 @@ jobs:
           lfs: true
       - name: Download data release from Zenodo
         run: |
-          curl --progress-bar \
-               -H "Authorization: Bearer ${{ secrets.ZENODO_TOKEN }}" \
-               -L \
-               -o data_release/gw_smc_data_release_core.zip \
-               https://zenodo.org/api/files/70280df5-4205-4726-ba71-b70ff2b29dfa/gw_smc_data_release_core.zip
-      - name: Unzip data release
-        run: |
-            unzip -o data_release/gw_smc_data_release_core.zip -d data_release
+          cd data_release
+          make download_core
       - name: Build the book
         run: |
           conda activate gw-smc
