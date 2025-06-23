@@ -6,6 +6,7 @@ RUN apt-get update && \
         texlive-latex-recommended \
         texlive-latex-extra \
         texlive-fonts-recommended \
+        texlive-xetex \
         dvipng \
         cm-super \
         curl \
