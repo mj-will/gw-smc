@@ -198,6 +198,29 @@ pp_test_injection_data: $(RELEASE_PATH_DATA)/pp_test_injection_data
 .PHONY: pp_test_injection_file
 pp_test_injection_file: $(RELEASE_PATH)/simulated_data/pp_tests/pp_test_injection_file.hdf5
 
+.PHONY: download_core
+download_core:
+	@echo "Core data release downloaded and zipped."
+	zenodo_get $(DATA_RELEASE_ZENODO_ID) -g "gw_smc_data_release_core.zip" -o "./"
+	unzip -o gw_smc_data_release_core.zip -d "./"
+
+.PHONY: download_data
+download_data:
+	@echo "Data release for injection data downloaded and zipped."
+	zenodo_get $(DATA_RELEASE_ZENODO_ID) -g "gw_smc_data_release_data.zip" -o "./"
+	unzip -o gw_smc_data_release_data.zip -d "./
+
+.PHONY: download_additional
+download_additional:
+	@echo "Additional data release downloaded and zipped."
+	zenodo_get $(DATA_RELEASE_ADDITIONAL_ZENODO_ID) -g "gw_smc_data_release_additional_results.zip" -o "./"
+	unzip -o gw_smc_data_release_additional_results.zip -d "./"
+
+.PHONY: download_all
+download_all: download_core download_data download_additional
+	@echo "All data releases downloaded and unzipped."
+
+
 .PHONY: clean
 clean:
 	rm -rf $(RELEASE_PATH) $(RELEASE_PATH_DATA) $(RELEASE_PATH_ADDITIONAL)

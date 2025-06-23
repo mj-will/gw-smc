@@ -1,3 +1,5 @@
 RELEASE_PATH=gw_smc_data_release_core
 RELEASE_PATH_ADDITIONAL=gw_smc_data_release_additional_results
 RELEASE_PATH_DATA=gw_smc_data_release_data
+
+DATA_RELEASE_ZENODO_ID=15651283
