@@ -1,4 +1,4 @@
-# Validating Sequential Monte Carlo for Gravitational-wave Inference - Code release
+# Validating Sequential Monte Carlo for Gravitational-Wave Inference - Code release
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15657235.svg)](https://doi.org/10.5281/zenodo.15657235)
 

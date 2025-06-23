@@ -1,5 +1,5 @@
-title: Validating Sequential Monte Carlo for Gravitational-wave Inference
-author: Michael J. Williams, Minas Karamanis, and Yilin Luo
+title: Validating Sequential Monte Carlo for Gravitational-Wave Inference
+author: Michael J. Williams, Minas Karamanis, Yilin Luo and Uros Seljak
 
 execute:
   execute_notebooks: force

@@ -1,6 +1,6 @@
 # Validating Sequential Monte Carlo for Gravitational-wave Inference
 
-This page describes the data release for *Validating Sequential Monte Carlo for Gravitational-wave Inference*.
+This page describes the data release for *Validating Sequential Monte Carlo for Gravitational-Wave Inference*.
 It includes code to reproduce each for the figures from the paper and instructions for how to run the analyses.
 
 The scripts, results files and data and available in two Zenodo records:
