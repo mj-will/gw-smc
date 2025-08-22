@@ -1,4 +1,4 @@
-# Validating Sequential Monte Carlo for Gravitational-wave Inference
+# Validating Sequential Monte Carlo for Gravitational-Wave Inference
 
 This page describes the data release for *Validating Sequential Monte Carlo for Gravitational-Wave Inference*.
 It includes code to reproduce each for the figures from the paper and instructions for how to run the analyses.
